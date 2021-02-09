@@ -205,7 +205,7 @@ bool molecule::read(FILE* fd)
     if(len > 128) len = 128;
 
     if(len) memcpy(m_name, buf, len);
-    m_name[len] = 0;
+    m_name[len-1] = 0;
 
     if(!fgets(buf, 510, fd)) return false;
     if(!fgets(buf, 510, fd)) return false;
