@@ -338,3 +338,51 @@ clean:
 	rm -f trans_curve1_ft
 	rm -f trans_curve2_ft
 	rm -f gpc_test
+
+agg.bmp:
+	cp ../art/agg.bmp .
+
+compositing.bmp:
+	cp ../art/compositing.bmp .
+
+spheres.bmp:
+	cp ../art/spheres.bmp .
+
+1.sdf:
+	cp ../art/1.sdf .
+
+1.bmp:
+	cp ../art/line_patterns.bmp.zip .
+	unzip -o line_patterns.bmp.zip
+
+timesi.ttf:
+	cp ../art/timesi.zip .
+	unzip -o timesi.zip
+	
+../freetype_test.o:	../freetype_test.cpp
+	@echo \< $*.cpp \>
+	$(CXX) -c $(CXXFREETYPEFLAGS) $*.cpp -o $@
+	
+../trans_curve1_ft.o:	../trans_curve1_ft.cpp
+	@echo \< $*.cpp \>
+	$(CXX) -c $(CXXFREETYPEFLAGS) $*.cpp -o $@
+	
+../trans_curve2_ft.o:	../trans_curve2_ft.cpp
+	@echo \< $*.cpp \>
+	$(CXX) -c $(CXXFREETYPEFLAGS) $*.cpp -o $@
+	
+../../font_freetype/agg_font_freetype.o: ../../font_freetype/agg_font_freetype.cpp
+	@echo \< $*.cpp \>
+	$(CXX) -c $(CXXFREETYPEFLAGS) $*.cpp -o $@
+	
+../gpc_test.o:	../gpc_test.cpp
+	@echo \< $*.cpp \>
+	$(CXX) -c $(CXXFLAGS) -I../../gpc $*.cpp -o $@
+
+%.o:	%.cpp
+	@echo \< $*.cpp \>
+	$(CXX) -c $(CXXFLAGS) $*.cpp -o $@
+
+.PHONY : clean
+
+

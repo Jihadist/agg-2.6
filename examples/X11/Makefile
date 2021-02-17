@@ -12,6 +12,7 @@ CXXFREETYPEFLAGS= $(AGGCXXFLAGS) -Wall \
 -I../../include \
 -I../../font_freetype \
 -I/usr/local/include/freetype2 \
+-I/usr/include/freetype2 \
 -L../../src \
 $(PIXFMT)
 
@@ -277,6 +278,38 @@ gpc_test: ../gpc_test.o ../make_arrows.o ../make_gb_poly.o $(PLATFORMSOURCES)
 svg_test: ../svg_viewer/agg_svg_parser.o ../svg_viewer/agg_svg_path_renderer.o ../svg_viewer/agg_svg_path_tokenizer.o ../svg_viewer/svg_test.o $(PLATFORMSOURCES) tiger.svg
 	$(CXX) $(CXXFLAGS) ../svg_viewer/agg_svg_parser.o ../svg_viewer/agg_svg_path_renderer.o ../svg_viewer/agg_svg_path_tokenizer.o ../svg_viewer/svg_test.o $(PLATFORMSOURCES) -o svg_test $(LIBS) -lfreetype -lexpat
 
+clean:
+	rm -f ../*.o
+	rm -f ../svg_viewer/*.o
+	rm -f ../../src/platform/$(PLATFORM)/agg_platform_support.o
+
+agg.ppm:
+	cp ../art/agg.ppm .
+
+compositing.ppm:
+	cp ../art/compositing.ppm .
+
+spheres.ppm:
+	cp ../art/spheres.ppm .
+
+shapes.txt:
+	cp ../art/shapes.txt .
+
+1.sdf:
+	cp ../art/1.sdf .
+
+1.ppm:
+	cp ../art/line_patterns.tar.gz .
+	gunzip line_patterns.tar.gz
+	tar -xvf line_patterns.tar
+	
+timesi.ttf:
+	cp ../art/timesi.zip .
+	unzip -o timesi.zip
+
+tiger.svg:
+	cp ../art/tiger.svg .
+	
 ../freetype_test.o:	../freetype_test.cpp
 	@echo \< $*.cpp \>
 	$(CXX) -c $(CXXFREETYPEFLAGS) $*.cpp -o $@

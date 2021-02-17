@@ -801,7 +801,7 @@ public:
         else
         {
             char buf[256];
-            sprintf(buf, "File not found: '%s'. Download http://www.antigrain.com/%s\n",
+            sprintf(buf, "File not found: '%s'. Copy from ../art/%s\n",
                     fname, fname);
             message(buf);
         }
