@@ -17,9 +17,9 @@
 //
 //----------------------------------------------------------------------------
 
-#include <cmath>
 #include "agg_vcgen_dash.h"
 #include "agg_shorten_path.h"
+#include <cmath>
 
 namespace agg
 {

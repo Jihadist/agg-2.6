@@ -19,7 +19,6 @@
 #ifndef AGG_ARROWHEAD_INCLUDED
 #define AGG_ARROWHEAD_INCLUDED
 
-#include "agg_basics.h"
 
 namespace agg
 {

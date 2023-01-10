@@ -16,8 +16,6 @@
 #ifndef AGG_SHORTEN_PATH_INCLUDED
 #define AGG_SHORTEN_PATH_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_vertex_sequence.h"
 
 namespace agg
 {

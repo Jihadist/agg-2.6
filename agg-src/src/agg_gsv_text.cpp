@@ -16,12 +16,10 @@
 // Class gsv_text
 //
 //----------------------------------------------------------------------------
-#include <cstring>
-#include <cstdio>
 #include "agg_gsv_text.h"
 #include "agg_bounding_rect.h"
-
-
+#include <cstring>
+#include <cstdio>
 
 namespace agg
 {

@@ -13,8 +13,8 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include <cmath>
 #include "agg_line_aa_basics.h"
+#include <cmath>
 
 namespace agg
 {

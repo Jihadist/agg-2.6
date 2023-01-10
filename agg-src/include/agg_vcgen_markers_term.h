@@ -16,9 +16,8 @@
 #ifndef AGG_VCGEN_MARKERS_TERM_INCLUDED
 #define AGG_VCGEN_MARKERS_TERM_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_vertex_sequence.h"
 
+#include "agg_array.h"
 namespace agg
 {
 

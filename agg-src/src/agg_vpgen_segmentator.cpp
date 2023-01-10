@@ -13,8 +13,8 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include <cmath>
 #include "agg_vpgen_segmentator.h"
+#include <cmath>
 
 namespace agg
 {

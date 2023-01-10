@@ -15,8 +15,8 @@
 #ifndef AGG_LINE_AA_BASICS_INCLUDED
 #define AGG_LINE_AA_BASICS_INCLUDED
 
-#include <cstdlib>
 #include "agg_basics.h"
+#include <cstdlib>
 
 namespace agg
 {

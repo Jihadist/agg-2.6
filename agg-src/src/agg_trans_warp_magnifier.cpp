@@ -13,8 +13,8 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include <cmath>
 #include "agg_trans_warp_magnifier.h"
+#include <cmath>
 
 namespace agg
 {

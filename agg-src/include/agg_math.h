@@ -19,8 +19,8 @@
 #ifndef AGG_MATH_INCLUDED
 #define AGG_MATH_INCLUDED
 
-#include <cmath>
 #include "agg_basics.h"
+#include <cmath>
 
 namespace agg
 {

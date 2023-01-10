@@ -17,9 +17,10 @@
 //
 //----------------------------------------------------------------------------
 
-#include <cmath>
-#include "agg_rounded_rect.h"
 
+#include "agg_rounded_rect.h"
+#include "agg_basics.h"
+#include <cmath>
 
 namespace agg
 {

@@ -19,7 +19,6 @@
 #ifndef AGG_VCGEN_DASH_INCLUDED
 #define AGG_VCGEN_DASH_INCLUDED
 
-#include "agg_basics.h"
 #include "agg_vertex_sequence.h"
 
 namespace agg

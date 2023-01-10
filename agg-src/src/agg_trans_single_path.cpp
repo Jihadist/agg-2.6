@@ -13,7 +13,6 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include "agg_math.h"
 #include "agg_vertex_sequence.h"
 #include "agg_trans_single_path.h"
 

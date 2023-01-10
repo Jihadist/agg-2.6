@@ -19,9 +19,9 @@
 //----------------------------------------------------------------------------
 
 
-#include <cmath>
 #include "agg_bezier_arc.h"
-
+#include "agg_trans_affine.h"
+#include <cmath>
 
 namespace agg
 {

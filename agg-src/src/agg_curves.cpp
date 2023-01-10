@@ -13,9 +13,9 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include <cmath>
 #include "agg_curves.h"
 #include "agg_math.h"
+#include <cmath>
 
 namespace agg
 {

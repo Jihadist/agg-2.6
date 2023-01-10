@@ -17,7 +17,7 @@
 //
 //----------------------------------------------------------------------------
 #include "agg_trans_affine.h"
-
+#include "agg_basics.h"
 
 
 namespace agg

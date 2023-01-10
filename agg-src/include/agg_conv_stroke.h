@@ -19,7 +19,6 @@
 #ifndef AGG_CONV_STROKE_INCLUDED
 #define AGG_CONV_STROKE_INCLUDED
 
-#include "agg_basics.h"
 #include "agg_vcgen_stroke.h"
 #include "agg_conv_adaptor_vcgen.h"
 

@@ -19,7 +19,6 @@
 #ifndef AGG_VERTEX_SEQUENCE_INCLUDED
 #define AGG_VERTEX_SEQUENCE_INCLUDED
 
-#include "agg_basics.h"
 #include "agg_array.h"
 #include "agg_math.h"
 

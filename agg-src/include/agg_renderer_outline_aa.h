@@ -15,15 +15,13 @@
 #ifndef AGG_RENDERER_OUTLINE_AA_INCLUDED
 #define AGG_RENDERER_OUTLINE_AA_INCLUDED
 
-#include <cstdlib>
 #include "agg_array.h"
 #include "agg_math.h"
 #include "agg_line_aa_basics.h"
 #include "agg_dda_line.h"
 #include "agg_ellipse_bresenham.h"
-#include "agg_renderer_base.h"
-#include "agg_gamma_functions.h"
 #include "agg_clip_liang_barsky.h"
+#include <cstdlib>
 
 namespace agg
 {
