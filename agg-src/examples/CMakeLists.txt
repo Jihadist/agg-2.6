@@ -463,9 +463,3 @@ IF( agg_USE_AGG2D )
     TARGET_LINK_LIBRARIES( agg2_demo antigrain )
 
 ENDIF( agg_USE_AGG2D )
-
-
-
-
-
-    

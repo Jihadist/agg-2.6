@@ -158,42 +158,14 @@ ADD_LIBRARY( antigrain
 )
 
 #controls code for interactive modifying samples
-IF( agg_BUILD_CONTROLS )
-    SET( controls_HEADERS
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_slider_ctrl.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_spline_ctrl.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_scale_ctrl.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_rbox_ctrl.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_polygon_ctrl.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_gamma_spline.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_gamma_ctrl.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_ctrl.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_cbox_ctrl.h
-	${antigrain_SOURCE_DIR}/include/ctrl/agg_bezier_ctrl.h
-    )
+IF ( agg_BUILD_CONTROLS )
 
-    ADD_LIBRARY( controls
-	ctrl/agg_spline_ctrl.cpp
-	ctrl/agg_slider_ctrl.cpp
-	ctrl/agg_scale_ctrl.cpp
-	ctrl/agg_rbox_ctrl.cpp
-	ctrl/agg_polygon_ctrl.cpp
-	ctrl/agg_gamma_spline.cpp
-	ctrl/agg_gamma_ctrl.cpp
-	ctrl/agg_cbox_ctrl.cpp
-	ctrl/agg_bezier_ctrl.cpp
+    ADD_SUBDIRECTORY( ctrl )
 
-	${controls_HEADERS}
-    )
-    TARGET_INCLUDE_DIRECTORIES( controls PRIVATE ${antigrain_SOURCE_DIR}/include )
-    TARGET_INCLUDE_DIRECTORIES( controls PUBLIC ${antigrain_SOURCE_DIR}/include/ctrl )
-    TARGET_LINK_LIBRARIES( antigrain PUBLIC controls )
-
-ENDIF( agg_BUILD_CONTROLS )
+ENDIF ( agg_BUILD_CONTROLS )
 
 # the main include dir of Agg
 TARGET_INCLUDE_DIRECTORIES( antigrain PUBLIC ${antigrain_SOURCE_DIR}/include )
-SET( AGG_INCLUDE_DIRS ${AGG_INCLUDE_DIRS} include )
 
 ##################################################
 # Set all includes, flags, libraries, related to expat
@@ -201,176 +173,47 @@ SET( AGG_INCLUDE_DIRS ${AGG_INCLUDE_DIRS} include )
 
 IF( agg_USE_EXPAT )
 
-    FIND_PACKAGE( EXPAT )
+    FIND_PACKAGE( EXPAT CONFIG REQUIRED )
+    TARGET_LINK_LIBRARIES( antigrain PUBLIC expat::expat)
 
-    IF(EXPAT_FOUND)
-        TARGET_INCLUDE_DIRECTORIES( antigrain PUBLIC ${EXPAT_INCLUDE_DIRS})
-	TARGET_LINK_LIBRARIES( antigrain PUBLIC ${EXPAT_LIBRARIES})
-    ELSE(EXPAT_FOUND)
-        MESSAGE(SEND_ERROR "expat not found")
-    ENDIF(EXPAT_FOUND)
 ENDIF( agg_USE_EXPAT )
 
 
-
-
-
-##################################################
-# Set all includes, flags, libraries, related to freetype
-##################################################
-
-IF ( agg_USE_FREETYPE )
-    FIND_PACKAGE( Freetype )
-    IF( FREETYPE_FOUND )
-
-        ADD_LIBRARY( freetypefont
-	    ../font_freetype/agg_font_freetype.h
-	    ../font_freetype/agg_font_freetype.cpp
-	)
-        TARGET_INCLUDE_DIRECTORIES( freetypefont PUBLIC ${FREETYPE_INCLUDE_DIRS} )
-	TARGET_LINK_LIBRARIES( freetypefont PUBLIC ${FREETYPE_LIBRARIES} )
-	TARGET_LINK_DIRECTORIES( freetypefont PUBLIC ${FREETYPE_LINK_DIR} )
-	SET( AGG_INCLUDE_DIRS ${AGG_INCLUDE_DIRS} font_freetype )
-	TARGET_COMPILE_DEFINITIONS( freetypefont PUBLIC -DAGG_USE_FREETYPE )
-	SET( AGG_FLAGS ${AGG_FLAGS} -DAGG_USE_FREETYPE )
-	TARGET_LINK_DIRECTORIES( antigrain PUBLIC freetypefont )
-	SET( AGG_LIBRARIES ${AGG_LIBRARIES} aggfontfreetype${PFDEBUG} )
-	TARGET_INCLUDE_DIRECTORIES( freetypefont PUBLIC ${antigrain_SOURCE_DIR}/font_freetype )
-	SET_TARGET_PROPERTIES( freetypefont  PROPERTIES OUTPUT_NAME aggfontfreetype${PFDEBUG} )
-
-	INSTALL( TARGETS freetypefont DESTINATION lib )
-	    INSTALL( FILES ../font_freetype/agg_font_freetype.h DESTINATION agg/font_freetype )
-    ELSE( FREETYPE_FOUND )
-        MESSAGE(SEND_ERROR "freetype not found")
-    ENDIF( FREETYPE_FOUND )
-ENDIF ( agg_USE_FREETYPE )
-
 #platform stuff to ease sample use
 IF( agg_BUILD_PLATFORM )
-    SET( platform_HEADERS
-	${antigrain_SOURCE_DIR}/include/platform/agg_platform_support.h
-    )
 
-    IF(WIN32)
+    ADD_SUBDIRECTORY( platform )
 
-	ADD_LIBRARY( platform
-	    ../src/platform/win32/agg_win32_bmp.cpp
-	    ../src/platform/win32/agg_platform_support.cpp
-	    ../font_win32_tt/agg_font_win32_tt.cpp
-
-	            ${platform_HEADERS}
-	)
-        TARGET_INCLUDE_DIRECTORIES( platform PRIVATE ${antigrain_SOURCE_DIR}/include )
-	TARGET_INCLUDE_DIRECTORIES( platform PUBLIC ${antigrain_SOURCE_DIR}/font_win32_tt )
-            INSTALL( FILES ../font_win32_tt/agg_font_win32_tt.h DESTINATION agg/font_win32_tt )
-    ENDIF(WIN32)
-    IF(UNIX)
-        ADD_LIBRARY( platform
-	    ../src/platform/X11/agg_platform_support.cpp
-
-	            ${platform_HEADERS}
-	)
-    ENDIF(UNIX)
-    IF(APPLE)
-        ADD_LIBRARY( platform
-	    ../src/platform/mac/agg_mac_pmap.cpp
-	    ../src/platform/mac/agg_platform_support.cpp
-
-	            ${platform_HEADERS}
-	)
-    ENDIF(APPLE)
-
-    ##################################################
-    # Set all includes, flags, libraries, related to SDL
-    ##################################################
-    FIND_PACKAGE( SDL QUIET )
-    IF( SDL_FOUND )
-        IF ( agg_USE_SDL_PLATFORM )
-	    SET( AGG_LIBRARIES ${AGG_LIBRARIES} aggctrl${PFDEBUG} aggsdlplatform${PFDEBUG} agg${PFDEBUG} )
-
-	    ADD_LIBRARY( sdlplatform
-		../src/platform/sdl/agg_platform_support.cpp
-
-		        ${platform_HEADERS}
-	    )
-	    TARGET_INCLUDE_DIRECTORIES( sdlplatform PUBLIC ${SDL_INCLUDE_DIR})
-	    TARGET_LINK_LIBRARIES( sdlplatform PUBLIC ${SDL_LIBRARY})
-	    TARGET_LINK_LIBRARIES( antigrain PUBLIC sdlplatform)
-	    INSTALL( TARGETS sdlplatform DESTINATION lib )
-	    SET_TARGET_PROPERTIES( sdlplatform  PROPERTIES OUTPUT_NAME aggsdlplatform${PFDEBUG} )
-	ENDIF ( agg_USE_SDL_PLATFORM )
-    ELSE( SDL_FOUND )
-        IF ( agg_USE_SDL_PLATFORM )
-	    MESSAGE( "SDL libray was not found, disable agg_USE_SDL_PLATFORM please" )
-	ENDIF ( agg_USE_SDL_PLATFORM )
-
-	TARGET_LINK_LIBRARIES( antigrain PUBLIC platform)
-	SET( AGG_LIBRARIES ${AGG_LIBRARIES} aggctrl${PFDEBUG} aggplatform${PFDEBUG} agg${PFDEBUG} )
-    ENDIF( SDL_FOUND )
 
 ENDIF( agg_BUILD_PLATFORM )
 
-# boolean operations library GPC
-
-IF ( agg_USE_GPC )
-
-    ADD_LIBRARY( gpcbool
-        ../gpc/gpc.c
-        ../gpc/gpc.h
-    )
-    TARGET_INCLUDE_DIRECTORIES( gpcbool PUBLIC ${antigrain_SOURCE_DIR}/gpc )
-    SET( AGG_INCLUDE_DIRS ${AGG_INCLUDE_DIRS} gpc )
-    TARGET_COMPILE_DEFINITIONS( gpcbool PUBLIC -DAGG_USE_GPC )
-    SET( AGG_FLAGS ${AGG_FLAGS} -DAGG_USE_GPC )
-    TARGET_LINK_LIBRARIES( antigrain PUBLIC gpcbool )
-    SET( AGG_LIBRARIES ${AGG_LIBRARIES} gpc${PFDEBUG} )
-
-
-    INSTALL( TARGETS gpcbool DESTINATION lib )
-	INSTALL( FILES ../gpc/gpc.h DESTINATION agg/gpc )	
-    SET_TARGET_PROPERTIES( gpcbool   PROPERTIES OUTPUT_NAME gpc${PFDEBUG} )
-ENDIF ( agg_USE_GPC )
 
 IF ( agg_USE_AGG2D )
+
+    OPTION( agg_USE_AGG2D_FREETYPE "Agg 2D graphical context uses freetype" OFF)
 
     ADD_LIBRARY( agg2d
         ../agg2d/agg2d.cpp
         ../agg2d/agg2d.h
     )
-    TARGET_INCLUDE_DIRECTORIES( agg2d PUBLIC ${antigrain_SOURCE_DIR}/agg2d )
+    TARGET_INCLUDE_DIRECTORIES( agg2d PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../agg2d )
     SET( AGG_INCLUDE_DIRS ${AGG_INCLUDE_DIRS} agg2d )
-    TARGET_COMPILE_DEFINITIONS( agg2d PUBLIC -DAGG_USE_AGG2D )
-    OPTION( agg_USE_AGG2D_FREETYPE "Agg 2D graphical context uses freetype" OFF)
-    SET( AGG_FLAGS ${AGG_FLAGS} -DAGG_USE_AGG2D )
-    TARGET_LINK_LIBRARIES( antigrain PUBLIC agg2d )
-    SET( AGG_LIBRARIES ${AGG_LIBRARIES} agg2d${PFDEBUG} )
+
+
+    TARGET_COMPILE_DEFINITIONS( agg2d PUBLIC AGG_USE_AGG2D )
+    TARGET_LINK_LIBRARIES( agg2d PRIVATE antigrain )
+    TARGET_LINK_LIBRARIES( antigrain INTERFACE agg2d )
 
     INSTALL( TARGETS agg2d DESTINATION lib )
-	INSTALL( FILES ../agg2d/agg2d.h DESTINATION agg/agg2d )	
-    SET_TARGET_PROPERTIES( agg2d  PROPERTIES OUTPUT_NAME agg2d${PFDEBUG} )
+    INSTALL( FILES ../agg2d/agg2d.h DESTINATION agg/agg2d )
+
+    IF ( agg_USE_AGG2D_FREETYPE )
+        TARGET_COMPILE_DEFINITIONS( agg2d PUBLIC AGG2D_USE_FREETYPE )
+    ENDIF ( agg_USE_AGG2D_FREETYPE )
+
 ENDIF ( agg_USE_AGG2D )
 
-IF ( agg_USE_AGG2D_FREETYPE )
-    ADD_DEFINITIONS( -DAGG2D_USE_FREETYPE )
-    SET( AGG_FLAGS ${AGG_FLAGS} -DAGG2D_USE_FREETYPE )
-ENDIF ( agg_USE_AGG2D_FREETYPE )
 
-SET_TARGET_PROPERTIES( antigrain PROPERTIES OUTPUT_NAME agg${PFDEBUG} )
+
 INSTALL( FILES ${antigrain_HEADERS} DESTINATION agg/include )
 INSTALL( TARGETS antigrain DESTINATION lib )
-IF( agg_BUILD_PLATFORM )
-    SET_TARGET_PROPERTIES( platform  PROPERTIES OUTPUT_NAME aggplatform${PFDEBUG} )
-    INSTALL( FILES ${platform_HEADERS} DESTINATION agg/include/platform )
-    INSTALL( TARGETS platform DESTINATION lib )
-ENDIF( agg_BUILD_PLATFORM )
-IF( agg_BUILD_CONTROLS )
-    SET_TARGET_PROPERTIES( controls  PROPERTIES OUTPUT_NAME aggctrl${PFDEBUG} )
-    INSTALL( FILES ${controls_HEADERS} DESTINATION agg/include/ctrl )
-    INSTALL( TARGETS controls DESTINATION lib )
-ENDIF( agg_BUILD_CONTROLS )
-
-
-SET( AGG_FLAGS ${AGG_FLAGS} CACHE STRING "Agg package flags" FORCE )
-SET( AGG_INCLUDE_DIRS ${AGG_INCLUDE_DIRS} CACHE STRING "Agg package libs include paths" FORCE )
-SET( AGG_LIBRARY_DIRS ${AGG_LIBRARY_DIRS} CACHE STRING "Agg package libs directory paths" FORCE )
-SET( AGG_LIBRARIES ${AGG_LIBRARIES} CACHE STRING "Agg package libraries" FORCE )
