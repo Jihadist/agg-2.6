@@ -17,6 +17,7 @@ OPTION( agg_BUILD_DEMO "Build the AGG demo" ON)
 OPTION( agg_BUILD_PLATFORM "Build the AGG platform helper" ON)
 OPTION( agg_BUILD_CONTROLS "Build the AGG controls" ON)
 
+SET (antigrain_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 IF( agg_BUILD_DEMO OR agg_BUILD_EXAMPLES )
     MESSAGE(STATUS "Force enable the platform and controls helper due to Demo / Example being build.")
     SET( agg_BUILD_PLATFORM ON CACHE BOOL "Build the AGG platform helper" FORCE)

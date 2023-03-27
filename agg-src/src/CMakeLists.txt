@@ -127,7 +127,7 @@ SET( antigrain_HEADERS
     ${antigrain_SOURCE_DIR}/include/agg_span_gradient_image.h
 )
 
-ADD_LIBRARY( antigrain
+ADD_LIBRARY( antigrain STATIC
 
     agg_arc.cpp
     agg_arrowhead.cpp
@@ -157,6 +157,9 @@ ADD_LIBRARY( antigrain
     ${antigrain_HEADERS}
 )
 
+ADD_LIBRARY ( antigrain_internal INTERFACE )
+ADD_LIBRARY( antigrain::antigrain ALIAS antigrain_internal )
+TARGET_LINK_LIBRARIES( antigrain_internal INTERFACE antigrain )
 #controls code for interactive modifying samples
 IF ( agg_BUILD_CONTROLS )
 
@@ -192,7 +195,7 @@ IF ( agg_USE_AGG2D )
 
     OPTION( agg_USE_AGG2D_FREETYPE "Agg 2D graphical context uses freetype" OFF)
 
-    ADD_LIBRARY( agg2d
+    ADD_LIBRARY( agg2d STATIC
         ../agg2d/agg2d.cpp
         ../agg2d/agg2d.h
     )
@@ -201,8 +204,10 @@ IF ( agg_USE_AGG2D )
 
 
     TARGET_COMPILE_DEFINITIONS( agg2d PUBLIC AGG_USE_AGG2D )
-    TARGET_LINK_LIBRARIES( agg2d PRIVATE antigrain )
-    TARGET_LINK_LIBRARIES( antigrain INTERFACE agg2d )
+    TARGET_LINK_LIBRARIES( agg2d PUBLIC antigrain freetypefont )
+
+    ADD_LIBRARY( antigrain::agg2d ALIAS agg2d )
+    TARGET_LINK_LIBRARIES( antigrain_internal INTERFACE antigrain::agg2d )
 
     INSTALL( TARGETS agg2d DESTINATION lib )
     INSTALL( FILES ../agg2d/agg2d.h DESTINATION agg/agg2d )

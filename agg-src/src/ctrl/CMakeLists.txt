@@ -4,19 +4,19 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.0 )
 
 
 SET( controls_HEADERS
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_slider_ctrl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_spline_ctrl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_scale_ctrl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_rbox_ctrl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_polygon_ctrl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_gamma_spline.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_gamma_ctrl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_ctrl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_cbox_ctrl.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include/ctrl/agg_bezier_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_slider_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_spline_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_scale_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_rbox_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_polygon_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_gamma_spline.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_gamma_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_cbox_ctrl.h
+    ${antigrain_SOURCE_DIR}/include/ctrl/agg_bezier_ctrl.h
 )
 
-ADD_LIBRARY( controls
+ADD_LIBRARY( controls STATIC
     agg_spline_ctrl.cpp
     agg_slider_ctrl.cpp
     agg_scale_ctrl.cpp
@@ -29,8 +29,10 @@ ADD_LIBRARY( controls
     ${controls_HEADERS}
 )
 TARGET_INCLUDE_DIRECTORIES( controls PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
-TARGET_LINK_LIBRARIES( controls PRIVATE antigrain )
-TARGET_LINK_LIBRARIES( antigrain INTERFACE controls )
+TARGET_LINK_LIBRARIES( controls PUBLIC antigrain )
+
+ADD_LIBRARY( antigrain::controls ALIAS ${PROJECT_NAME} )
+TARGET_LINK_LIBRARIES( antigrain_internal INTERFACE antigrain::controls )
 
 INSTALL( FILES ${controls_HEADERS} DESTINATION agg/include/ctrl )
 INSTALL( TARGETS controls DESTINATION lib )
