@@ -1,7 +1,7 @@
 PROJECT( antigrain )
 
 # additional are modified Find routines
-SET ( CMAKE_MODULE_PATH "${antigrain_SOURCE_DIR}/bin" )
+#SET ( CMAKE_MODULE_PATH "${antigrain_SOURCE_DIR}/bin" )
 
 CMAKE_MINIMUM_REQUIRED( VERSION 3.0 )
 
@@ -13,13 +13,6 @@ SET( AGG_FLAGS "" )
 SET( AGG_INCLUDE_DIRS "" )
 SET( AGG_LIBRARY_DIRS "" )
 SET( AGG_LIBRARIES "" )
-
-SET (LIBRARY_OUTPUT_PATH ${antigrain_BINARY_DIR}/lib/ CACHE PATH "Single output directory for building all libraries." FORCE )
-SET( AGG_LIBRARY_DIRS  lib )
-#SET (EXECUTABLE_OUTPUT_PATH ${antigrain_BINARY_DIR}/exe/ CACHE PATH "Single output directory for building all executables.")
-#MARK_AS_ADVANCED(LIBRARY_OUTPUT_PATH EXECUTABLE_OUTPUT_PATH)
-
-LINK_DIRECTORIES(  ${antigrain_BINARY_DIR}/lib )
 
 OPTION( agg_USE_GPC "Use Gpc Boolean library" OFF)
 OPTION( agg_USE_FREETYPE "Use Freetype library" OFF)
@@ -38,11 +31,6 @@ IF( agg_BUILD_DEMO OR agg_BUILD_EXAMPLES )
     SET( agg_BUILD_PLATFORM ON CACHE BOOL "Build the AGG platform helper" FORCE)
     SET( agg_BUILD_CONTROLS ON CACHE BOOL "Build the AGG controls" FORCE)
 ENDIF( agg_BUILD_DEMO OR agg_BUILD_EXAMPLES )
-
-IF( agg_USE_DEBUG )
-    #SET( PFDEBUG "d" )
-    SET( CMAKE_DEBUG_POSTFIX "d" )
-ENDIF( agg_USE_DEBUG )
 
 # for the moment this decides the platform code.
 IF(WIN32)
@@ -63,35 +51,6 @@ IF(UNIX)
     ENDIF(X11_FOUND)
 
 ENDIF(UNIX)
-
-# more specific set platform code part to use for different compilers/tool sets
-IF ( ${CMAKE_GENERATOR} STREQUAL "MSYS Makefiles" )
-	SET (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG" CACHE STRING
-		"Flags used by the compiler during release builds" FORCE)
-	SET (CMAKE_CX_FLAGS_RELEASE "-DNDEBUG" CACHE STRING
-		"Flags used by the compiler during release builds" FORCE)		
-ENDIF ( ${CMAKE_GENERATOR} STREQUAL "MSYS Makefiles" )
-
-IF ( ${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles" )
-	
-ENDIF ( ${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles" )
-
-IF ( ${CMAKE_GENERATOR} STREQUAL "Unix Makefiles" )
-    IF( CYGWIN OR MINGW )
-		SET (CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG" CACHE STRING
-			"Flags used by the compiler during release builds" FORCE)
-		SET (CMAKE_C_FLAGS_RELEASE "-DNDEBUG" CACHE STRING
-			"Flags used by the compiler during release builds" FORCE)
-    ENDIF( CYGWIN OR MINGW )	
-ENDIF ( ${CMAKE_GENERATOR} STREQUAL "Unix Makefiles" )
-
-IF ( ${CMAKE_GENERATOR} MATCHES "Visual Studio.*" )
-	
-ENDIF ( ${CMAKE_GENERATOR} MATCHES "Visual Studio.*" )
-
-IF ( ${CMAKE_GENERATOR} MATCHES "Borland Makefiles" )
-
-ENDIF ( ${CMAKE_GENERATOR} MATCHES "Borland Makefiles" )
 
 
 ADD_SUBDIRECTORY( src )
