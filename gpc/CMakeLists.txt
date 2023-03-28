@@ -1,6 +1,6 @@
 PROJECT( gpcbool )
 
-CMAKE_MINIMUM_REQUIRED( VERSION 3.0 )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.13 )
 
 # boolean operations library GPC
 
