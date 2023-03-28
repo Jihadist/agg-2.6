@@ -41,7 +41,56 @@ jobs:
                 mkdir ${{github.workspace}}/build
                 conan install  . --build=missing -pr:b=default -if ${{github.workspace}}/build
           - name: Configure CMake
-            run: cmake -DCMAKE_BUILD_TYPE="${{env.BUILD_TYPE}}" -DCMAKE_PREFIX_PATH:PATH=${{github.workspace}}/build -Dagg_USE_AGG2D:BOOL=ON -Dagg_USE_AGG2D_FREETYPE:BOOL=ON -Dagg_USE_EXPAT:BOOL=ON -Dagg_USE_FREETYPE:BOOL=ON -Dagg_USE_GPC:BOOL=ON -B "${{github.workspace}}/build" .
+            run: >-
+                cmake -DCMAKE_BUILD_TYPE="${{env.BUILD_TYPE}}"
+                -DCMAKE_PREFIX_PATH:PATH=${{github.workspace}}/build
+                -DCMAKE_MODULE_PATH:PATH=${{github.workspace}}/build
+                -Dagg_BUILD_CONTROLS:BOOL=ON
+                -Dagg_BUILD_DEMO:BOOL=ON
+                -Dagg_BUILD_EXAMPLES:BOOL=ON
+                -Dagg_BUILD_PLATFORM:BOOL=ON
+                -Dagg_USE_AGG2D:BOOL=ON
+                -Dagg_USE_AGG2D_FREETYPE:BOOL=ON
+                -Dagg_USE_EXPAT:BOOL=ON
+                -Dagg_USE_FREETYPE:BOOL=ON
+                -Dagg_USE_GPC:BOOL=ON
+                -B "${{github.workspace}}/build" .
+
+          - name: Build
+            run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    GCC:
+        runs-on: ubuntu-22.04
+        name: ubuntu-22.04
+        strategy:
+            fail-fast: false
+            matrix: 
+               os: [ubuntu-22.04]
+
+
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+                fetch-depth: 0
+          
+          - name: Install packages
+            run: |
+                sudo apt-get install -y gcc g++ cmake wget git libsdl1.2-dev libfreetype-dev libexpat1-dev 
+
+          - name: Configure CMake
+            run: >-
+                cmake -DCMAKE_BUILD_TYPE="${{env.BUILD_TYPE}}"
+                -Dagg_BUILD_CONTROLS:BOOL=ON
+                -Dagg_BUILD_DEMO:BOOL=ON
+                -Dagg_BUILD_EXAMPLES:BOOL=ON
+                -Dagg_BUILD_PLATFORM:BOOL=ON
+                -Dagg_USE_AGG2D:BOOL=ON
+                -Dagg_USE_AGG2D_FREETYPE:BOOL=ON
+                -Dagg_USE_EXPAT:BOOL=ON
+                -Dagg_USE_FREETYPE:BOOL=ON
+                -Dagg_USE_GPC:BOOL=ON
+                -Dagg_USE_SDL_PLATFORM:BOOL=ON
+                -B "${{github.workspace}}/build" .
 
           - name: Build
             run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}

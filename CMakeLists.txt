@@ -1,6 +1,6 @@
 PROJECT( antigrain )
 
-CMAKE_MINIMUM_REQUIRED( VERSION 3.0 )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.13 )
 
 SET(AGG_MAJOR_VERSION 0 )
 SET(AGG_MINOR_VERSION 1 )
@@ -12,17 +12,30 @@ OPTION( agg_USE_EXPAT "Use Expat library" OFF)
 OPTION( agg_USE_SDL_PLATFORM "Use SDL as platform" OFF)
 OPTION( agg_USE_PACK "Package Agg" OFF)
 OPTION( agg_USE_AGG2D "Agg 2D graphical context" OFF)
-OPTION( agg_BUILD_EXAMPLES "Build the AGG examples" ON)
-OPTION( agg_BUILD_DEMO "Build the AGG demo" ON)
+OPTION( agg_USE_AGG2D_FREETYPE "Agg 2D graphical context uses freetype" OFF)
+OPTION( agg_BUILD_EXAMPLES "Build the AGG examples" OFF)
+OPTION( agg_BUILD_DEMO "Build the AGG demo" OFF)
 OPTION( agg_BUILD_PLATFORM "Build the AGG platform helper" ON)
 OPTION( agg_BUILD_CONTROLS "Build the AGG controls" ON)
 
-SET (antigrain_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-IF( agg_BUILD_DEMO OR agg_BUILD_EXAMPLES )
-    MESSAGE(STATUS "Force enable the platform and controls helper due to Demo / Example being build.")
-    SET( agg_BUILD_PLATFORM ON CACHE BOOL "Build the AGG platform helper" FORCE)
-    SET( agg_BUILD_CONTROLS ON CACHE BOOL "Build the AGG controls" FORCE)
+IF ( UNIX )
+    IF ( agg_USE_AGG2D )
+        IF ( NOT agg_USE_AGG2D_FREETYPE )
+            MESSAGE( FATAL_ERROR "agg_USE_AGG2D_FREETYPE must be enabled" )
+        ENDIF( NOT agg_USE_AGG2D_FREETYPE )
+    ENDIF( agg_USE_AGG2D )
+ENDIF(UNIX)
+
+IF ( agg_BUILD_DEMO OR agg_BUILD_EXAMPLES )
+    IF ( NOT agg_BUILD_PLATFORM )
+        MESSAGE( FATAL_ERROR "agg_BUILD_PLATFORM must be enabled" )
+    ENDIF( NOT agg_BUILD_PLATFORM )
+    IF ( NOT agg_BUILD_CONTROLS )
+        MESSAGE( FATAL_ERROR "agg_BUILD_CONTROLS must be enabled" )
+    ENDIF( NOT agg_BUILD_CONTROLS )
 ENDIF( agg_BUILD_DEMO OR agg_BUILD_EXAMPLES )
+
+SET (antigrain_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 # for the moment this decides the platform code.
 IF(WIN32)
@@ -32,13 +45,6 @@ ENDIF(WIN32)
 
 IF(UNIX)
     SET( WIN32GUI "" )
-
-    FIND_PACKAGE(X11)
-    IF(X11_FOUND)  
-        INCLUDE_DIRECTORIES(${X11_INCLUDE_DIRS})
-        LINK_LIBRARIES(${X11_LIBRARIES})
-    ENDIF(X11_FOUND)
-
 ENDIF(UNIX)
 
 

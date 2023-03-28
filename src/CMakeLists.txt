@@ -193,7 +193,7 @@ ENDIF( agg_BUILD_PLATFORM )
 
 IF ( agg_USE_AGG2D )
 
-    OPTION( agg_USE_AGG2D_FREETYPE "Agg 2D graphical context uses freetype" OFF)
+
 
     ADD_LIBRARY( agg2d STATIC
         ../agg2d/agg2d.cpp
