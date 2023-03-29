@@ -127,7 +127,7 @@ SET( antigrain_HEADERS
     ${antigrain_SOURCE_DIR}/include/agg_span_gradient_image.h
 )
 
-ADD_LIBRARY( antigrain STATIC
+ADD_LIBRARY( agg STATIC
 
     agg_arc.cpp
     agg_arrowhead.cpp
@@ -157,9 +157,9 @@ ADD_LIBRARY( antigrain STATIC
     ${antigrain_HEADERS}
 )
 
-ADD_LIBRARY ( antigrain_internal INTERFACE )
-ADD_LIBRARY( antigrain::antigrain ALIAS antigrain_internal )
-TARGET_LINK_LIBRARIES( antigrain_internal INTERFACE antigrain )
+ADD_LIBRARY ( agg_internal INTERFACE )
+ADD_LIBRARY( agg::agg ALIAS agg_internal )
+TARGET_LINK_LIBRARIES( agg_internal INTERFACE agg )
 #controls code for interactive modifying samples
 IF ( agg_BUILD_CONTROLS )
 
@@ -168,7 +168,9 @@ IF ( agg_BUILD_CONTROLS )
 ENDIF ( agg_BUILD_CONTROLS )
 
 # the main include dir of Agg
-TARGET_INCLUDE_DIRECTORIES( antigrain PUBLIC ${antigrain_SOURCE_DIR}/include )
+TARGET_INCLUDE_DIRECTORIES( agg PUBLIC
+    $<BUILD_INTERFACE:${antigrain_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include/agg>)
 
 ##################################################
 # Set all includes, flags, libraries, related to expat
@@ -177,7 +179,7 @@ TARGET_INCLUDE_DIRECTORIES( antigrain PUBLIC ${antigrain_SOURCE_DIR}/include )
 IF( agg_USE_EXPAT )
 
     FIND_PACKAGE( EXPAT CONFIG REQUIRED )
-    TARGET_LINK_LIBRARIES( antigrain PUBLIC expat::expat)
+    TARGET_LINK_LIBRARIES( agg PUBLIC expat::expat)
 
 ENDIF( agg_USE_EXPAT )
 
@@ -187,38 +189,26 @@ IF( agg_BUILD_PLATFORM )
 
     ADD_SUBDIRECTORY( platform )
 
-
 ENDIF( agg_BUILD_PLATFORM )
 
+SET_TARGET_PROPERTIES(
+    agg
+    PROPERTIES
+    PUBLIC_HEADER "${antigrain_HEADERS}"
+    VERSION ${agg_VERSION}
+    SOVERSION 0.${agg_VERSION}
+)
 
-IF ( agg_USE_AGG2D )
+INSTALL(TARGETS agg
+    EXPORT aggTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT devel
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/agg COMPONENT devel
+)
 
-
-
-    ADD_LIBRARY( agg2d STATIC
-        ../agg2d/agg2d.cpp
-        ../agg2d/agg2d.h
-    )
-    TARGET_INCLUDE_DIRECTORIES( agg2d PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../agg2d )
-    SET( AGG_INCLUDE_DIRS ${AGG_INCLUDE_DIRS} agg2d )
-
-
-    TARGET_COMPILE_DEFINITIONS( agg2d PUBLIC AGG_USE_AGG2D )
-    TARGET_LINK_LIBRARIES( agg2d PUBLIC antigrain freetypefont )
-
-    ADD_LIBRARY( antigrain::agg2d ALIAS agg2d )
-    TARGET_LINK_LIBRARIES( antigrain_internal INTERFACE antigrain::agg2d )
-
-    INSTALL( TARGETS agg2d DESTINATION lib )
-    INSTALL( FILES ../agg2d/agg2d.h DESTINATION agg/agg2d )
-
-    IF ( agg_USE_AGG2D_FREETYPE )
-        TARGET_COMPILE_DEFINITIONS( agg2d PUBLIC AGG2D_USE_FREETYPE )
-    ENDIF ( agg_USE_AGG2D_FREETYPE )
-
-ENDIF ( agg_USE_AGG2D )
-
-
-
-INSTALL( FILES ${antigrain_HEADERS} DESTINATION agg/include )
-INSTALL( TARGETS antigrain DESTINATION lib )
+INSTALL(EXPORT aggTargets
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/agg/
+    FILE aggTargets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    COMPONENT devel
+)
