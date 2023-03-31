@@ -94,3 +94,39 @@ jobs:
 
           - name: Build
             run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    Mac:
+        runs-on: macos-${{ matrix.macos_version }}
+        name: macos-${{ matrix.macos_version }}
+        strategy:
+            fail-fast: false
+            matrix: 
+               macos_version: [11, 12]
+
+
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+            with:
+                fetch-depth: 0
+          
+          - name: Install packages
+            run: |
+                brew install cmake cmake wget git freetype expat
+
+          - name: Configure CMake
+            run: >-
+                cmake -DCMAKE_BUILD_TYPE="${{env.BUILD_TYPE}}"
+                -Dagg_BUILD_CONTROLS:BOOL=ON
+                -Dagg_BUILD_DEMO:BOOL=ON
+                -Dagg_BUILD_EXAMPLES:BOOL=ON
+                -Dagg_BUILD_PLATFORM:BOOL=ON
+                -Dagg_USE_AGG2D:BOOL=ON
+                -Dagg_USE_AGG2D_FREETYPE:BOOL=ON
+                -Dagg_USE_EXPAT:BOOL=ON
+                -Dagg_USE_FREETYPE:BOOL=ON
+                -Dagg_USE_GPC:BOOL=ON
+                -B "${{github.workspace}}/build" .
+
+          - name: Build
+            run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
