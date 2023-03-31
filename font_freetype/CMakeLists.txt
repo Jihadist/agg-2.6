@@ -2,7 +2,7 @@ PROJECT( aggfontfreetype )
 
 CMAKE_MINIMUM_REQUIRED( VERSION 3.13 )
 
-FIND_PACKAGE( Freetype REQUIRED )
+FIND_PACKAGE( Freetype REQUIRED MODULE )
 
 SET( font_freetype_HEADERS
     agg_font_freetype.h

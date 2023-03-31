@@ -1,4 +1,14 @@
 
+##################################################
+# Set all includes, flags, libraries, related to expat
+##################################################
+
+IF( agg_USE_EXPAT )
+
+    FIND_PACKAGE( EXPAT CONFIG REQUIRED )
+
+ENDIF( agg_USE_EXPAT )
+
 ADD_EXECUTABLE( aa_demo ${WIN32GUI}
     aa_demo.cpp
 )
@@ -435,7 +445,7 @@ IF ( agg_USE_EXPAT )
         ./svg_viewer/agg_svg_path_tokenizer.h
         )
 
-    TARGET_LINK_LIBRARIES( svg_test agg::agg )
+    TARGET_LINK_LIBRARIES( svg_test agg::agg expat::expat )
 
 ENDIF ( agg_USE_EXPAT )
 

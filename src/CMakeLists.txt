@@ -54,6 +54,7 @@ SET( antigrain_HEADERS
     ${antigrain_SOURCE_DIR}/include/agg_path_storage_integer.h
     ${antigrain_SOURCE_DIR}/include/agg_pattern_filters_rgba.h
     ${antigrain_SOURCE_DIR}/include/agg_pixfmt_amask_adaptor.h
+    ${antigrain_SOURCE_DIR}/include/agg_pixfmt_base.h
     ${antigrain_SOURCE_DIR}/include/agg_pixfmt_gray.h
     ${antigrain_SOURCE_DIR}/include/agg_pixfmt_rgb.h
     ${antigrain_SOURCE_DIR}/include/agg_pixfmt_rgb_packed.h
@@ -64,6 +65,7 @@ SET( antigrain_HEADERS
     ${antigrain_SOURCE_DIR}/include/agg_rasterizer_outline.h
     ${antigrain_SOURCE_DIR}/include/agg_rasterizer_outline_aa.h
     ${antigrain_SOURCE_DIR}/include/agg_rasterizer_scanline_aa.h
+    ${antigrain_SOURCE_DIR}/include/agg_rasterizer_scanline_aa_nogamma.h
     ${antigrain_SOURCE_DIR}/include/agg_rasterizer_sl_clip.h
     ${antigrain_SOURCE_DIR}/include/agg_renderer_base.h
     ${antigrain_SOURCE_DIR}/include/agg_renderer_markers.h
@@ -171,17 +173,6 @@ ENDIF ( agg_BUILD_CONTROLS )
 TARGET_INCLUDE_DIRECTORIES( agg PUBLIC
     $<BUILD_INTERFACE:${antigrain_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include/agg>)
-
-##################################################
-# Set all includes, flags, libraries, related to expat
-##################################################
-
-IF( agg_USE_EXPAT )
-
-    FIND_PACKAGE( EXPAT CONFIG REQUIRED )
-    TARGET_LINK_LIBRARIES( agg PUBLIC expat::expat)
-
-ENDIF( agg_USE_EXPAT )
 
 
 #platform stuff to ease sample use
