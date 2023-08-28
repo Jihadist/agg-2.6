@@ -38,9 +38,11 @@ One of the examples is an SVG Viewer.
 Cloned with history on May 6, 2019 (rev r132) from the official Sourceforge AGG project at
 https://svn.code.sf.net/p/agg/svn.
 
+Updated with history on August 28, 2023 (rev r139) 
+
 ## License
 
-AGG 2.6, along with the official Sourceforge AGG project, is based off of AGG 2.4, which
+AGG 2.7, along with the official Sourceforge AGG project, is based off of AGG 2.4, which
 is dual licensed by either a Modified BSD License, or an Anti-Grain Geometry Public License.
 These licenses allow for free use in commercial software.
 
