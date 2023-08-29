@@ -10,7 +10,7 @@ required_conan_version = ">=1.53.0"
 class AggConan(ConanFile):
     exports_sources = '*'
     name = "aggeom-agg"
-    version = '2.6.1'
+    version = '2.7.1'
     description = "AGG Anti-Grain Geometry Library"
     license = "BSD-3-Clause"
     url = "https://github.com/aggeom/agg-2.6"
