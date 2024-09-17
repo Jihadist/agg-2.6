@@ -150,6 +150,13 @@ namespace agg
                               PathStorage& path)
     {   
         typedef typename PathStorage::value_type value_type;
+        // Freetype tags changed from chars to unsigned chars at 2.13.3
+#if (FREETYPE_MAJOR > 2) || (FREETYPE_MAJOR == 2 && FREETYPE_MINOR > 13) || \
+    (FREETYPE_MAJOR == 2 && FREETYPE_MINOR == 13 && FREETYPE_PATCH >= 3)
+        typedef unsigned char* tags_type;
+#else
+        typedef char* tags_type;
+#endif
 
         FT_Vector   v_last;
         FT_Vector   v_control;
@@ -158,11 +165,11 @@ namespace agg
 
         FT_Vector*  point;
         FT_Vector*  limit;
-        char*       tags;
+        tags_type   tags;
 
         int   n;         // index of contour in outline
         int   first;     // index of first point in contour
-        char  tag;       // current point's state
+        int   tag;       // current point's state
 
         first = 0;
 
@@ -179,7 +186,7 @@ namespace agg
             v_control = v_start;
 
             point = outline.points + first;
-            tags  = (char*)(outline.tags)  + first;
+            tags  = outline.tags + first;
             tag   = FT_CURVE_TAG(tags[0]);
 
             // A contour cannot start with a cubic control point!
