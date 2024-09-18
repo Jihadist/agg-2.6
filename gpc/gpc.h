@@ -8,24 +8,30 @@ Project:   Generic Polygon Clipper
 
 File:      gpc.h
 Author:    Alan Murta (email: gpc@cs.man.ac.uk)
-Version:   2.32
-Date:      17th December 2004
+Version:   2.33
+Date:      21st May 2014
 
-Copyright: (C) 1997-2004, Advanced Interfaces Group,
-           University of Manchester.
+MIT License
 
-           This software is free for non-commercial use. It may be copied,
-           modified, and redistributed provided that this copyright notice
-           is preserved on all copies. The intellectual property rights of
-           the algorithms used reside with the University of Manchester
-           Advanced Interfaces Group.
+Copyright (c) 2021 Alan Murta and the Advanced Interfaces Group, University of Manchester
 
-           You may not use this software, in whole or in part, in support
-           of any commercial product without the express consent of the
-           author.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-           There is no warranty or other guarantee of fitness of this
-           software for any purpose. It is provided solely "as is".
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ===========================================================================
 */
@@ -46,7 +52,7 @@ Copyright: (C) 1997-2004, Advanced Interfaces Group,
 
 #define GPC_EPSILON (DBL_EPSILON)
 
-#define GPC_VERSION "2.32"
+#define GPC_VERSION "2.33"
 
 
 /*
