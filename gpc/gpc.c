@@ -8,24 +8,30 @@ Project:   Generic Polygon Clipper
 
 File:      gpc.c
 Author:    Alan Murta (email: gpc@cs.man.ac.uk)
-Version:   2.32
-Date:      17th December 2004
+Version:   2.33
+Date:      21st May 2014
 
-Copyright: (C) 1997-2004, Advanced Interfaces Group,
-           University of Manchester.
+MIT License
 
-           This software is free for non-commercial use. It may be copied,
-           modified, and redistributed provided that this copyright notice
-           is preserved on all copies. The intellectual property rights of
-           the algorithms used reside with the University of Manchester
-           Advanced Interfaces Group.
+Copyright (c) 2021 Alan Murta and the Advanced Interfaces Group, University of Manchester
 
-           You may not use this software, in whole or in part, in support
-           of any commercial product without the express consent of the
-           author.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-           There is no warranty or other guarantee of fitness of this
-           software for any purpose. It is provided solely "as is".
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ===========================================================================
 */
@@ -726,6 +732,110 @@ static void build_intersection_table(it_node **it, edge_node *aet, double dy)
   }
 }
 
+
+static void swap_intersecting_edge_bundles(edge_node **aet, it_node *intersect)
+{
+  edge_node *e0 = intersect->ie[0];
+  edge_node *e1 = intersect->ie[1];
+  edge_node *e0t = e0;
+  edge_node *e1t = e1;
+  edge_node *e0n = e0->next;
+  edge_node *e1n = e1->next;
+
+  // Find the node before the e0 bundle
+  edge_node *e0p = e0->prev;
+  if (e0->bstate[ABOVE] == BUNDLE_HEAD)
+  {
+    do
+    {
+      e0t = e0p;
+      e0p = e0p->prev;
+    }
+    while (e0p && (e0p->bstate[ABOVE] == BUNDLE_TAIL));
+  }
+
+  // Find the node before the e1 bundle
+  edge_node *e1p = e1->prev;
+  if (e1->bstate[ABOVE] == BUNDLE_HEAD)
+  {
+    do
+    {
+      e1t = e1p;
+      e1p = e1p->prev;
+    }
+    while (e1p && (e1p->bstate[ABOVE] == BUNDLE_TAIL));
+  }
+
+  // Swap the e0p and e1p links
+  if (e0p)
+  {
+    if (e1p)
+    {
+      if (e0p != e1)
+      {
+        e0p->next = e1t;
+        e1t->prev = e0p;
+      }
+      if (e1p != e0)
+      {
+        e1p->next = e0t;
+        e0t->prev = e1p;
+      }
+    }
+    else
+    {
+      if (e0p != e1)
+      {
+        e0p->next = e1t;
+        e1t->prev = e0p;
+      }
+      *aet = e0t;
+      e0t->prev = NULL;
+    }
+  }
+  else
+  {
+    if (e1p != e0)
+    {
+      e1p->next = e0t;
+      e0t->prev = e1p;
+    }
+    *aet = e1t;
+    e1t->prev = NULL;
+  }
+
+  // Re-link after e0
+  if (e0p != e1)
+  {
+    e0->next = e1n;
+    if (e1n)
+    {
+      e1n->prev = e0;
+    }
+  }
+  else
+  {
+    e0->next = e1t;
+    e1t->prev = e0;
+  }
+
+  // Re-link after e1
+  if (e1p != e0)
+  {
+    e1->next = e0n;
+    if (e0n)
+    {
+      e0n->prev = e1;
+    }
+  }
+  else
+  {
+    e1->next = e0t;
+    e0t->prev = e1;
+  }
+}
+
+
 static int count_contours(polygon_node *polygon)
 {
   int          nc, nv;
@@ -1126,9 +1236,9 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
   vertex_node   *vtx, *nv;
   h_state        horiz[2];
   int            in[2], exists[2], parity[2]= {LEFT, LEFT};
-  int            c, v, contributing= 0, search, scanbeam= 0, sbt_entries= 0;
-  int            vclass, bl= 0, br= 0, tl= 0, tr= 0;
-  double        *sbt= NULL, xb, px, yb, yt= 0, dy= 0, ix, iy;
+  int            c, v, contributing, scanbeam= 0, sbt_entries= 0;
+  int            vclass, bl, br, tl, tr;
+  double        *sbt= NULL, xb, px, yb, yt, dy, ix, iy;
 
   /* Test for trivial NULL result cases */
   if (((subj->num_contours == 0) && (clip->num_contours == 0))
@@ -1231,7 +1341,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
       if (next_edge->bundle[ABOVE][next_edge->type])
       {
         if (EQ(e0->xb, next_edge->xb) && EQ(e0->dx, next_edge->dx)
-	 && (e0->top.y != yb))
+   && (e0->top.y != yb))
         {
           next_edge->bundle[ABOVE][ next_edge->type]^= 
             e0->bundle[ABOVE][ next_edge->type];
@@ -1386,10 +1496,10 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             break;
           case IMM:
             if (xb != px)
-	    {
+      {
               add_right(cf, xb, yb);
               px= xb;
-	    }
+      }
             merge_left(cf, edge->outp[BELOW], out_poly);
             edge->outp[BELOW]= NULL;
             add_local_min(&out_poly, edge, xb, yb);
@@ -1397,10 +1507,10 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             break;
           case EMM:
             if (xb != px)
-	    {
+      {
               add_left(cf, xb, yb);
               px= xb;
-	    }
+      }
             merge_right(cf, edge->outp[BELOW], out_poly);
             edge->outp[BELOW]= NULL;
             add_local_min(&out_poly, edge, xb, yb);
@@ -1441,7 +1551,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
 
         /* Copy bundle head state to the adjacent tail edge if required */
         if ((edge->bstate[BELOW] == BUNDLE_HEAD) && prev_edge)
-	{
+  {
           if (prev_edge->bstate[BELOW] == BUNDLE_TAIL)
           {
             prev_edge->outp[BELOW]= edge->outp[BELOW];
@@ -1449,8 +1559,8 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             if (prev_edge->prev)
               if (prev_edge->prev->bstate[BELOW] == BUNDLE_TAIL)
                 prev_edge->bstate[BELOW]= BUNDLE_HEAD;
-	  }
-	}
+    }
+  }
       }
       else
       {
@@ -1476,7 +1586,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
         /* Only generate output for contributing intersections */
         if ((e0->bundle[ABOVE][CLIP] || e0->bundle[ABOVE][SUBJ])
          && (e1->bundle[ABOVE][CLIP] || e1->bundle[ABOVE][SUBJ]))
-	{
+  {
           p= e0->outp[ABOVE];
           q= e1->outp[ABOVE];
           ix= intersect->point.x;
@@ -1526,7 +1636,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
              || (in[SUBJ] ^ e1->bundle[ABOVE][SUBJ] ^ e0->bundle[ABOVE][SUBJ]);
             break;
           }
-	  
+    
           vclass= tr + (tl << 1) + (br << 2) + (bl << 3);
 
           switch (vclass)
@@ -1610,54 +1720,21 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
           default:
             break;
           } /* End of switch */
-	} /* End of contributing intersection conditional */
+        } /* End of contributing intersection conditional */
 
         /* Swap bundle sides in response to edge crossing */
         if (e0->bundle[ABOVE][CLIP])
-	  e1->bside[CLIP]= !e1->bside[CLIP];
+          e1->bside[CLIP]= !e1->bside[CLIP];
         if (e1->bundle[ABOVE][CLIP])
-	  e0->bside[CLIP]= !e0->bside[CLIP];
+          e0->bside[CLIP]= !e0->bside[CLIP];
         if (e0->bundle[ABOVE][SUBJ])
-	  e1->bside[SUBJ]= !e1->bside[SUBJ];
+          e1->bside[SUBJ]= !e1->bside[SUBJ];
         if (e1->bundle[ABOVE][SUBJ])
-	  e0->bside[SUBJ]= !e0->bside[SUBJ];
+          e0->bside[SUBJ]= !e0->bside[SUBJ];
 
-        /* Swap e0 and e1 bundles in the AET */
-        prev_edge= e0->prev;
-        next_edge= e1->next;
-        if (next_edge)
-          next_edge->prev= e0;
+        /* Swap the edge bundles in the aet */
+        swap_intersecting_edge_bundles(&aet, intersect);
 
-        if (e0->bstate[ABOVE] == BUNDLE_HEAD)
-        {
-          search= TRUE;
-          while (search)
-          {
-            prev_edge= prev_edge->prev;
-            if (prev_edge)
-            {
-              if (prev_edge->bstate[ABOVE] != BUNDLE_TAIL)
-                search= FALSE;
-            }
-            else
-              search= FALSE;
-          }
-        }
-        if (!prev_edge)
-        {
-          aet->prev= e1;
-          e1->next= aet;
-          aet= e0->next;
-        }
-        else
-        {
-          prev_edge->next->prev= e1;
-          e1->next= prev_edge->next;
-          prev_edge->next= e0->next;
-        }
-        e0->next->prev= prev_edge;
-        e1->next->prev= e1;
-        e0->next= next_edge;
       } /* End of IT loop*/
 
       /* Prepare for next scanbeam */
@@ -1691,7 +1768,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
           edge->bundle[BELOW][CLIP]= edge->bundle[ABOVE][CLIP];
           edge->bundle[BELOW][SUBJ]= edge->bundle[ABOVE][SUBJ];
           edge->xb= edge->xt;
-	      }
+        }
         edge->outp[ABOVE]= NULL;
       }
     }
@@ -1780,16 +1857,16 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
   sb_tree       *sbtree= NULL;
   it_node       *it= NULL, *intersect;
   edge_node     *edge, *prev_edge, *next_edge, *succ_edge, *e0, *e1;
-  edge_node     *aet= NULL, *c_heap= NULL, *s_heap= NULL, *cf= NULL;
+  edge_node     *aet= NULL, *c_heap= NULL, *s_heap= NULL, *cf;
   lmt_node      *lmt= NULL, *local_min;
   polygon_node  *tlist= NULL, *tn, *tnn, *p, *q;
   vertex_node   *lt, *ltn, *rt, *rtn;
   h_state        horiz[2];
-  vertex_type    cft= NUL;
+  vertex_type    cft;
   int            in[2], exists[2], parity[2]= {LEFT, LEFT};
-  int            s, v, contributing= 0, search, scanbeam= 0, sbt_entries= 0;
-  int            vclass, bl= 0, br= 0, tl= 0, tr= 0;
-  double        *sbt= NULL, xb, px, nx, yb, yt= 0, dy= 0, ix, iy;
+  int            s, v, contributing, scanbeam= 0, sbt_entries= 0;
+  int            vclass, bl, br, tl, tr;
+  double        *sbt= NULL, xb, px, nx, yb, yt, dy, ix, iy;
 
   /* Test for trivial NULL result cases */
   if (((subj->num_contours == 0) && (clip->num_contours == 0))
@@ -1884,7 +1961,7 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
       if (next_edge->bundle[ABOVE][next_edge->type])
       {
         if (EQ(e0->xb, next_edge->xb) && EQ(e0->dx, next_edge->dx)
-	 && (e0->top.y != yb))
+   && (e0->top.y != yb))
         {
           next_edge->bundle[ABOVE][ next_edge->type]^= 
             e0->bundle[ABOVE][ next_edge->type];
@@ -2006,11 +2083,11 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             break;
           case IMN:
             if (cft == LED)
-	    {
+      {
               if (cf->bot.y != yb)
                 VERTEX(cf, BELOW, LEFT, cf->xb, yb);
               new_tristrip(&tlist, cf, cf->xb, yb);
-	    }
+      }
             edge->outp[ABOVE]= cf->outp[ABOVE];
             VERTEX(edge, ABOVE, RIGHT, xb, yb);
             break;
@@ -2021,11 +2098,11 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             break;
           case IRI:
             if (cft == LED)
-	    {
+      {
               if (cf->bot.y != yb)
                 VERTEX(cf, BELOW, LEFT, cf->xb, yb);
               new_tristrip(&tlist, cf, cf->xb, yb);
-	    }
+      }
             VERTEX(edge, BELOW, RIGHT, xb, yb);
             edge->outp[ABOVE]= NULL;
             break;
@@ -2034,7 +2111,7 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             edge->outp[ABOVE]= NULL;
             cft= IMX;
             break;
-	  case IMM:
+    case IMM:
             VERTEX(edge, BELOW, LEFT, xb, yb);
             edge->outp[ABOVE]= cf->outp[ABOVE];
             if (xb != cf->xb)
@@ -2057,25 +2134,25 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
           case RED:
             edge->outp[ABOVE]= cf->outp[ABOVE];
             if (cft == LED)
-	    {
+      {
               if (cf->bot.y == yb)
-	      {
+        {
                 VERTEX(edge, BELOW, RIGHT, xb, yb);
-	      }
+        }
               else
-	      {
+        {
                 if (edge->bot.y == yb)
-		{
+    {
                   VERTEX(cf, BELOW, LEFT, cf->xb, yb);
                   VERTEX(edge, BELOW, RIGHT, xb, yb);
-		}
-	      }
-	    }
+    }
+        }
+      }
             else
-	    {
+      {
               VERTEX(edge, BELOW, RIGHT, xb, yb);
               VERTEX(edge, ABOVE, RIGHT, xb, yb);
-	    }
+      }
             cf= NULL;
             break;
           default:
@@ -2101,7 +2178,7 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
 
         /* Copy bundle head state to the adjacent tail edge if required */
         if ((edge->bstate[BELOW] == BUNDLE_HEAD) && prev_edge)
-	{
+  {
           if (prev_edge->bstate[BELOW] == BUNDLE_TAIL)
           {
             prev_edge->outp[BELOW]= edge->outp[BELOW];
@@ -2109,8 +2186,8 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             if (prev_edge->prev)
               if (prev_edge->prev->bstate[BELOW] == BUNDLE_TAIL)
                 prev_edge->bstate[BELOW]= BUNDLE_HEAD;
-	  }
-	}
+    }
+  }
       }
       else
       {
@@ -2136,7 +2213,7 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
         /* Only generate output for contributing intersections */
         if ((e0->bundle[ABOVE][CLIP] || e0->bundle[ABOVE][SUBJ])
          && (e1->bundle[ABOVE][CLIP] || e1->bundle[ABOVE][SUBJ]))
-	{
+  {
           p= e0->outp[ABOVE];
           q= e1->outp[ABOVE];
           ix= intersect->point.x;
@@ -2299,54 +2376,21 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
           default:
             break;
           } /* End of switch */
-	} /* End of contributing intersection conditional */
+        } /* End of contributing intersection conditional */
 
         /* Swap bundle sides in response to edge crossing */
         if (e0->bundle[ABOVE][CLIP])
-	  e1->bside[CLIP]= !e1->bside[CLIP];
+          e1->bside[CLIP]= !e1->bside[CLIP];
         if (e1->bundle[ABOVE][CLIP])
-	  e0->bside[CLIP]= !e0->bside[CLIP];
+          e0->bside[CLIP]= !e0->bside[CLIP];
         if (e0->bundle[ABOVE][SUBJ])
-	  e1->bside[SUBJ]= !e1->bside[SUBJ];
+          e1->bside[SUBJ]= !e1->bside[SUBJ];
         if (e1->bundle[ABOVE][SUBJ])
-	  e0->bside[SUBJ]= !e0->bside[SUBJ];
+          e0->bside[SUBJ]= !e0->bside[SUBJ];
 
-        /* Swap e0 and e1 bundles in the AET */
-        prev_edge= e0->prev;
-        next_edge= e1->next;
-        if (e1->next)
-          e1->next->prev= e0;
+        /* Swap the edge bundles in the aet */
+        swap_intersecting_edge_bundles(&aet, intersect);
 
-        if (e0->bstate[ABOVE] == BUNDLE_HEAD)
-        {
-          search= TRUE;
-          while (search)
-          {
-            prev_edge= prev_edge->prev;
-            if (prev_edge)
-            {
-              if (prev_edge->bundle[ABOVE][CLIP]
-               || prev_edge->bundle[ABOVE][SUBJ]
-               || (prev_edge->bstate[ABOVE] == BUNDLE_HEAD))
-                search= FALSE;
-            }
-            else
-              search= FALSE;
-          }
-        }
-        if (!prev_edge)
-        {
-           e1->next= aet;
-           aet= e0->next;
-        }
-        else
-        {
-          e1->next= prev_edge->next;
-          prev_edge->next= e0->next;
-        }
-        e0->next->prev= prev_edge;
-        e1->next->prev= e1;
-        e0->next= next_edge;
       } /* End of IT loop*/
 
       /* Prepare for next scanbeam */
