@@ -1141,25 +1141,32 @@ void gpc_read_polygon(FILE *fp, int read_hole_flags, gpc_polygon *p)
 {
   int c, v;
 
-  fscanf(fp, "%d", &(p->num_contours));
+  if (fscanf(fp, "%d", &(p->num_contours)) != 1) 
+    return;
   MALLOC(p->hole, p->num_contours * sizeof(int),
          "hole flag array creation", int);
   MALLOC(p->contour, p->num_contours
          * sizeof(gpc_vertex_list), "contour creation", gpc_vertex_list);
   for (c= 0; c < p->num_contours; c++)
   {
-    fscanf(fp, "%d", &(p->contour[c].num_vertices));
+    if (fscanf(fp, "%d", &(p->contour[c].num_vertices)) != 1)
+      return;
 
-    if (read_hole_flags)
-      fscanf(fp, "%d", &(p->hole[c]));
-    else
+    if (read_hole_flags) {
+      if (fscanf(fp, "%d", &(p->hole[c])) != 1)
+        return;
+    } else {
       p->hole[c]= FALSE; /* Assume all contours to be external */
+    }
 
     MALLOC(p->contour[c].vertex, p->contour[c].num_vertices
            * sizeof(gpc_vertex), "vertex creation", gpc_vertex);
     for (v= 0; v < p->contour[c].num_vertices; v++)
-      fscanf(fp, "%lf %lf", &(p->contour[c].vertex[v].x),
-                            &(p->contour[c].vertex[v].y));
+      if (fscanf(fp, "%lf %lf", &(p->contour[c].vertex[v].x),
+                                &(p->contour[c].vertex[v].y)) != 2)
+      { 
+        return;
+      }
   }
 }
 
