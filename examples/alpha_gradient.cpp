@@ -256,7 +256,7 @@ public:
         stroke.add_vertex(m_x[1], m_y[1], agg::path_cmd_line_to);
         stroke.add_vertex(m_x[2], m_y[2], agg::path_cmd_line_to);
         stroke.add_vertex(m_x[0]+m_x[2]-m_x[1], m_y[0]+m_y[2]-m_y[1], agg::path_cmd_line_to);
-        stroke.add_vertex(0, 0, agg::path_cmd_end_poly | agg::path_flags_close);
+        stroke.add_vertex(0, 0, +agg::path_cmd_end_poly | agg::path_flags_close);
         ras.add_path(stroke);
         agg::render_scanlines_aa_solid(ras, sl, ren_base, agg::rgba(0, 0, 0));
 

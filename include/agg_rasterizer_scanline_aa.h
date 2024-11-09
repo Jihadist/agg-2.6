@@ -133,7 +133,7 @@ namespace agg
             int i;
             for(i = 0; i < aa_scale; i++)
             {
-                m_gamma[i] = uround(gamma_function(double(i) / aa_mask) * aa_mask);
+                m_gamma[i] = uround(gamma_function(double(i) / (double)aa_mask) * (double)aa_mask);
             }
         }
 
@@ -158,8 +158,8 @@ namespace agg
         template<class VertexSource>
         void add_path(VertexSource& vs, unsigned path_id=0)
         {
-            double x;
-            double y;
+            double x = 0;
+            double y = 0;
 
             unsigned cmd;
             vs.rewind(path_id);

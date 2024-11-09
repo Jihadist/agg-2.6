@@ -238,7 +238,7 @@ public:
 
         rb.blend_from(prim_pixfmt_type(rbuf_img(1)), 
                       0, 250, 180, 
-                      agg::cover_type(m_alpha_dst.value() * agg::cover_full));
+                      agg::cover_type(m_alpha_dst.value() * (double)agg::cover_full));
 
         circle(rb, 
                agg::srgba8(0xFD, 0xF0, 0x6F, unsigned(m_alpha_dst.value() * 255)), 

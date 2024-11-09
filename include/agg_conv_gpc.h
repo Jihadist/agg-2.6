@@ -407,7 +407,7 @@ namespace agg
                     return path_cmd_move_to;
                 }
                 m_status = status_stop;
-                return path_cmd_end_poly | path_flags_close;
+                return +path_cmd_end_poly | path_flags_close;
             }
         }
         else
@@ -420,7 +420,7 @@ namespace agg
             {
                 m_status = status_move_to;
             }
-            return path_cmd_end_poly | path_flags_close;
+            return +path_cmd_end_poly | path_flags_close;
         }
         return path_cmd_stop;
     }

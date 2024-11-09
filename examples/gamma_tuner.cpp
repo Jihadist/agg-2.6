@@ -30,10 +30,10 @@ class the_application : public agg::platform_support
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
+        m_gamma    (5, 5+45, 350-5, 11+45, !flip_y),
         m_r        (5, 5,    350-5, 11,    !flip_y),
         m_g        (5, 5+15, 350-5, 11+15, !flip_y),
         m_b        (5, 5+30, 350-5, 11+30, !flip_y),
-        m_gamma    (5, 5+45, 350-5, 11+45, !flip_y),
         m_pattern  (355, 1,  495,   60, !flip_y)
     {
         add_ctrl(m_r);

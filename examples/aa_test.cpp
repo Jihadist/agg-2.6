@@ -90,7 +90,7 @@ public:
         m_cmd[0] = agg::path_cmd_move_to;
         m_cmd[1] = agg::path_cmd_line_to;
         m_cmd[2] = agg::path_cmd_line_to;
-        m_cmd[3] = agg::path_cmd_end_poly | agg::path_flags_close;
+        m_cmd[3] = +agg::path_cmd_end_poly | agg::path_flags_close;
         m_cmd[4] = agg::path_cmd_stop;
     }
 

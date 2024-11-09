@@ -48,7 +48,7 @@ namespace agg
 
         enum downscale_shift_e
         {
-            downscale_shift = interpolator_type::subpixel_shift - 
+            downscale_shift = +interpolator_type::subpixel_shift - 
                               gradient_subpixel_shift
         };
 
@@ -63,23 +63,23 @@ namespace agg
             m_interpolator(&inter),
             m_gradient_function(&gradient_function),
             m_color_function(&color_function),
-            m_d1(iround(d1 * gradient_subpixel_scale)),
-            m_d2(iround(d2 * gradient_subpixel_scale))
+            m_d1(iround(d1 * (double)gradient_subpixel_scale)),
+            m_d2(iround(d2 * (double)gradient_subpixel_scale))
         {}
 
         //--------------------------------------------------------------------
         interpolator_type& interpolator() { return *m_interpolator; }
         const GradientF& gradient_function() const { return *m_gradient_function; }
         const ColorF& color_function() const { return *m_color_function; }
-        double d1() const { return double(m_d1) / gradient_subpixel_scale; }
-        double d2() const { return double(m_d2) / gradient_subpixel_scale; }
+        double d1() const { return double(m_d1) / (double)gradient_subpixel_scale; }
+        double d2() const { return double(m_d2) / (double)gradient_subpixel_scale; }
 
         //--------------------------------------------------------------------
         void interpolator(interpolator_type& i) { m_interpolator = &i; }
         void gradient_function(GradientF& gf) { m_gradient_function = &gf; }
         void color_function(ColorF& cf) { m_color_function = &cf; }
-        void d1(double v) { m_d1 = iround(v * gradient_subpixel_scale); }
-        void d2(double v) { m_d2 = iround(v * gradient_subpixel_scale); }
+        void d1(double v) { m_d1 = iround(v * (double)gradient_subpixel_scale); }
+        void d2(double v) { m_d2 = iround(v * (double)gradient_subpixel_scale); }
 
         //--------------------------------------------------------------------
         void prepare() {}
@@ -209,9 +209,9 @@ namespace agg
 
         //---------------------------------------------------------------------
         gradient_radial_focus(double r, double fx, double fy) : 
-            m_r (iround(r  * gradient_subpixel_scale)), 
-            m_fx(iround(fx * gradient_subpixel_scale)), 
-            m_fy(iround(fy * gradient_subpixel_scale))
+            m_r (iround(r  * (double)gradient_subpixel_scale)), 
+            m_fx(iround(fx * (double)gradient_subpixel_scale)), 
+            m_fy(iround(fy * (double)gradient_subpixel_scale))
         {
             update_values();
         }
@@ -219,16 +219,16 @@ namespace agg
         //---------------------------------------------------------------------
         void init(double r, double fx, double fy)
         {
-            m_r  = iround(r  * gradient_subpixel_scale);
-            m_fx = iround(fx * gradient_subpixel_scale);
-            m_fy = iround(fy * gradient_subpixel_scale);
+            m_r  = iround(r  * (double)gradient_subpixel_scale);
+            m_fx = iround(fx * (double)gradient_subpixel_scale);
+            m_fy = iround(fy * (double)gradient_subpixel_scale);
             update_values();
         }
 
         //---------------------------------------------------------------------
-        double radius()  const { return double(m_r)  / gradient_subpixel_scale; }
-        double focus_x() const { return double(m_fx) / gradient_subpixel_scale; }
-        double focus_y() const { return double(m_fy) / gradient_subpixel_scale; }
+        double radius()  const { return double(m_r)  / (double)gradient_subpixel_scale; }
+        double focus_x() const { return double(m_fx) / (double)gradient_subpixel_scale; }
+        double focus_y() const { return double(m_fy) / (double)gradient_subpixel_scale; }
 
         //---------------------------------------------------------------------
         int calculate(int x, int y, int) const

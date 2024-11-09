@@ -58,12 +58,12 @@ namespace agg
             unsigned i;
             for(i = 0; i < gamma_size; i++)
             {
-                m_dir_gamma[i] = HiResT(i << (hi_res_shift - gamma_shift));
+                m_dir_gamma[i] = HiResT(i << (+hi_res_shift - gamma_shift));
             }
 
             for(i = 0; i < hi_res_size; i++)
             {
-                m_inv_gamma[i] = LoResT(i >> (hi_res_shift - gamma_shift));
+                m_inv_gamma[i] = LoResT(i >> (+hi_res_shift - gamma_shift));
             }
         }
 

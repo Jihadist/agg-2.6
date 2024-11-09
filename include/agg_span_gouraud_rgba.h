@@ -77,7 +77,7 @@ namespace agg
                 m_g = m_g1 + iround(m_dg * k);
                 m_b = m_b1 + iround(m_db * k);
                 m_a = m_a1 + iround(m_da * k);
-                m_x = iround((m_x1 + m_dx * k) * subpixel_scale);
+                m_x = iround((m_x1 + m_dx * k) * (double)subpixel_scale);
             }
 
             double m_x1;

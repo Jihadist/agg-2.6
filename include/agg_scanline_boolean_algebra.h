@@ -176,7 +176,7 @@ namespace agg
                 {
                     cover = *covers1++ * *covers2++;
                     sl.add_cell(x++, 
-                                (cover == cover_full * cover_full) ?
+                                (cover == +cover_full * cover_full) ?
                                 cover_full : 
                                 (cover >> cover_shift));
                 }
@@ -196,7 +196,7 @@ namespace agg
                     {
                         cover = *(span1->covers) * *covers2++;
                         sl.add_cell(x++, 
-                                    (cover == cover_full * cover_full) ?
+                                    (cover == +cover_full * cover_full) ?
                                     cover_full : 
                                     (cover >> cover_shift));
                     }
@@ -228,7 +228,7 @@ namespace agg
             case 3:      // Both are solid spans
                 cover = *(span1->covers) * *(span2->covers);
                 sl.add_span(x, len, 
-                            (cover == cover_full * cover_full) ?
+                            (cover == +cover_full * cover_full) ?
                             cover_full : 
                             (cover >> cover_shift));
                 break;
@@ -286,11 +286,11 @@ namespace agg
                 if(span2->x < x) covers2 += x - span2->x;
                 do
                 {
-                    cover = cover_mask * cover_mask - 
+                    cover = +cover_mask * cover_mask - 
                                 (cover_mask - *covers1++) * 
                                 (cover_mask - *covers2++);
                     sl.add_cell(x++, 
-                                (cover == cover_full * cover_full) ?
+                                (cover == +cover_full * cover_full) ?
                                 cover_full : 
                                 (cover >> cover_shift));
                 }
@@ -308,11 +308,11 @@ namespace agg
                 {
                     do
                     {
-                        cover = cover_mask * cover_mask - 
+                        cover = +cover_mask * cover_mask - 
                                     (cover_mask - *(span1->covers)) * 
                                     (cover_mask - *covers2++);
                         sl.add_cell(x++, 
-                                    (cover == cover_full * cover_full) ?
+                                    (cover == +cover_full * cover_full) ?
                                     cover_full : 
                                     (cover >> cover_shift));
                     }
@@ -331,11 +331,11 @@ namespace agg
                 {
                     do
                     {
-                        cover = cover_mask * cover_mask - 
+                        cover = +cover_mask * cover_mask - 
                                     (cover_mask - *covers1++) * 
                                     (cover_mask - *(span2->covers));
                         sl.add_cell(x++, 
-                                    (cover == cover_full * cover_full) ?
+                                    (cover == +cover_full * cover_full) ?
                                     cover_full : 
                                     (cover >> cover_shift));
                     }
@@ -344,11 +344,11 @@ namespace agg
                 break;
 
             case 3:      // Both are solid spans
-                cover = cover_mask * cover_mask - 
+                cover = +cover_mask * cover_mask - 
                             (cover_mask - *(span1->covers)) * 
                             (cover_mask - *(span2->covers));
                 sl.add_span(x, len, 
-                            (cover == cover_full * cover_full) ?
+                            (cover == +cover_full * cover_full) ?
                             cover_full : 
                             (cover >> cover_shift));
                 break;
@@ -371,7 +371,7 @@ namespace agg
         static AGG_INLINE unsigned calculate(unsigned a, unsigned b)
         {
             unsigned cover = a + b;
-            if(cover > cover_mask) cover = cover_mask + cover_mask - cover;
+            if(cover > cover_mask) cover = +cover_mask + cover_mask - cover;
             return cover;
         }
     };
@@ -391,10 +391,10 @@ namespace agg
         static AGG_INLINE unsigned calculate(unsigned a, unsigned b)
         {
             unsigned k = a * b;
-            if(k == cover_mask * cover_mask) return 0;
+            if(k == +cover_mask * cover_mask) return 0;
 
-            a = (cover_mask * cover_mask - (a << cover_shift) + k) >> cover_shift;
-            b = (cover_mask * cover_mask - (b << cover_shift) + k) >> cover_shift;
+            a = (+cover_mask * cover_mask - (a << cover_shift) + k) >> cover_shift;
+            b = (+cover_mask * cover_mask - (b << cover_shift) + k) >> cover_shift;
             return cover_mask - ((a * b) >> cover_shift);
         }
     };
@@ -550,7 +550,7 @@ namespace agg
                     if(cover)
                     {
                         sl.add_cell(x, 
-                                    (cover == cover_full * cover_full) ?
+                                    (cover == +cover_full * cover_full) ?
                                     cover_full : 
                                     (cover >> cover_shift));
                     }
@@ -568,7 +568,7 @@ namespace agg
                     if(cover)
                     {
                         sl.add_cell(x, 
-                                    (cover == cover_full * cover_full) ?
+                                    (cover == +cover_full * cover_full) ?
                                     cover_full : 
                                     (cover >> cover_shift));
                     }
@@ -588,7 +588,7 @@ namespace agg
                         if(cover)
                         {
                             sl.add_cell(x, 
-                                        (cover == cover_full * cover_full) ?
+                                        (cover == +cover_full * cover_full) ?
                                         cover_full : 
                                         (cover >> cover_shift));
                         }
@@ -603,7 +603,7 @@ namespace agg
                 if(cover)
                 {
                     sl.add_span(x, len, 
-                                (cover == cover_full * cover_full) ?
+                                (cover == +cover_full * cover_full) ?
                                 cover_full : 
                                 (cover >> cover_shift));
                 }

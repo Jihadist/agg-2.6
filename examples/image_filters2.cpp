@@ -198,7 +198,7 @@ public:
                 double x_end   = 195.0;
                 double y_start = 235.0;
                 double y_end   = initial_height() - 5.0;
-                double x_center = (x_start + x_end) / 2;
+                //double x_center = (x_start + x_end) / 2;
 
                 agg::path_storage p;
                 agg::conv_stroke<agg::path_storage> stroke(p);
@@ -232,11 +232,11 @@ public:
                 double xs = (x_end + x_start)/2.0 - (filter.diameter() * (x_end - x_start) / 32.0);
                 unsigned nn = filter.diameter() * 256;
                 p.remove_all();
-                p.move_to(xs+0.5, ys + dy * weights[0] / agg::image_filter_scale);
+                p.move_to(xs+0.5, ys + dy * weights[0] / (double)agg::image_filter_scale);
                 for(i = 1; i < nn; i++)
                 {
                     p.line_to(xs + dx * i / n + 0.5,
-                              ys + dy * weights[i] / agg::image_filter_scale);
+                              ys + dy * weights[i] / (double)agg::image_filter_scale);
                 }
                 ras.add_path(stroke);
                 agg::render_scanlines_aa_solid(ras, sl, rb, agg::srgba8(100, 0, 0));

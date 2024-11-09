@@ -91,7 +91,7 @@ namespace agg
         unsigned m_contours;
         unsigned m_points;
     
-        conv_poly_counter(Src& src) : m_src(&src), m_contours(0), m_points(0) {}
+        conv_poly_counter(Src& src) : m_contours(0), m_points(0), m_src(&src) {}
     
         void rewind(unsigned path_id)
         {
@@ -174,8 +174,8 @@ public:
             double t1 = elapsed_time();
 
             ras.reset();
-            double x;
-            double y;
+            double x = 0;
+            double y = 0;
             unsigned cmd;
             start_timer();
             while(!agg::is_stop(cmd = counter.vertex(&x, &y)))

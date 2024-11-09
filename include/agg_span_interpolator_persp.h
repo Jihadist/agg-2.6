@@ -119,13 +119,13 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= x;
             dy -= y;
-            int sx1 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sx1 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
             dx = xt;
             dy = yt + delta;
             m_trans_inv.transform(&dx, &dy);
             dx -= x;
             dy -= y;
-            int sy1 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sy1 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             x += len;
             xt = x;
@@ -137,13 +137,13 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= x;
             dy -= y;
-            int sx2 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sx2 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
             dx = xt;
             dy = yt + delta;
             m_trans_inv.transform(&dx, &dy);
             dx -= x;
             dy -= y;
-            int sy2 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sy2 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             m_scale_x = dda2_line_interpolator(sx1, sx2, len);
             m_scale_y = dda2_line_interpolator(sy1, sy2, len);
@@ -172,7 +172,7 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= xe;
             dy -= ye;
-            int sx2 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sx2 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             // Calculate scale by Y at x2,y2
             dx = xt;
@@ -180,7 +180,7 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= xe;
             dy -= ye;
-            int sy2 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sy2 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             // Initialize the interpolators
             m_scale_x = dda2_line_interpolator(sx1, sx2, len);
@@ -200,8 +200,8 @@ namespace agg
         //----------------------------------------------------------------
         void coordinates(int* x, int* y) const
         {
-            *x = iround(m_iterator.x * subpixel_scale);
-            *y = iround(m_iterator.y * subpixel_scale);
+            *x = iround(m_iterator.x * (double)subpixel_scale);
+            *y = iround(m_iterator.y * (double)subpixel_scale);
         }
 
         //----------------------------------------------------------------
@@ -321,8 +321,8 @@ namespace agg
             double xt = x;
             double yt = y;
             m_trans_dir.transform(&xt, &yt);
-            int x1 = iround(xt * subpixel_scale);
-            int y1 = iround(yt * subpixel_scale);
+            int x1 = iround(xt * (double)subpixel_scale);
+            int y1 = iround(yt * (double)subpixel_scale);
 
             double dx;
             double dy;
@@ -334,7 +334,7 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= x;
             dy -= y;
-            int sx1 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sx1 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             // Calculate scale by Y at x1,y1
             dx = xt;
@@ -342,15 +342,15 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= x;
             dy -= y;
-            int sy1 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sy1 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             // Calculate transformed coordinates at x2,y2 
             x += len;
             xt = x;
             yt = y;
             m_trans_dir.transform(&xt, &yt);
-            int x2 = iround(xt * subpixel_scale);
-            int y2 = iround(yt * subpixel_scale);
+            int x2 = iround(xt * (double)subpixel_scale);
+            int y2 = iround(yt * (double)subpixel_scale);
 
             // Calculate scale by X at x2,y2
             dx = xt + delta;
@@ -358,7 +358,7 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= x;
             dy -= y;
-            int sx2 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sx2 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             // Calculate scale by Y at x2,y2
             dx = xt;
@@ -366,7 +366,7 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= x;
             dy -= y;
-            int sy2 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sy2 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             // Initialize the interpolators
             m_coord_x = dda2_line_interpolator(x1,  x2,  len);
@@ -389,8 +389,8 @@ namespace agg
             double xt = xe;
             double yt = ye;
             m_trans_dir.transform(&xt, &yt);
-            int x2 = iround(xt * subpixel_scale);
-            int y2 = iround(yt * subpixel_scale);
+            int x2 = iround(xt * (double)subpixel_scale);
+            int y2 = iround(yt * (double)subpixel_scale);
 
             const double delta = 1/double(subpixel_scale);
             double dx;
@@ -402,7 +402,7 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= xe;
             dy -= ye;
-            int sx2 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sx2 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             // Calculate scale by Y at x2,y2
             dx = xt;
@@ -410,7 +410,7 @@ namespace agg
             m_trans_inv.transform(&dx, &dy);
             dx -= xe;
             dy -= ye;
-            int sy2 = uround(subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
+            int sy2 = uround((double)subpixel_scale/std::sqrt(dx*dx + dy*dy)) >> subpixel_shift;
 
             // Initialize the interpolators
             m_coord_x = dda2_line_interpolator(x1,  x2,  len);

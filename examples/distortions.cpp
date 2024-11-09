@@ -319,14 +319,14 @@ inline void calculate_wave(int* x, int* y,
                            double cx, double cy, 
                            double period, double amplitude, double phase)
 {
-    double xd = double(*x) / agg::image_subpixel_scale - cx;
-    double yd = double(*y) / agg::image_subpixel_scale - cy;
+    double xd = double(*x) / (double)agg::image_subpixel_scale - cx;
+    double yd = double(*y) / (double)agg::image_subpixel_scale - cy;
     double d = sqrt(xd*xd + yd*yd);
     if(d > 1)
     {
         double a = cos(d / (16.0 * period) - phase) * (1.0 / (amplitude * d)) + 1.0; 
-        *x = int((xd * a + cx) * agg::image_subpixel_scale);
-        *y = int((yd * a + cy) * agg::image_subpixel_scale);
+        *x = int((xd * a + cx) * (double)agg::image_subpixel_scale);
+        *y = int((yd * a + cy) * (double)agg::image_subpixel_scale);
     }
 }
 
@@ -336,13 +336,13 @@ inline void calculate_swirl(int* x, int* y,
                             double cx, double cy, 
                             double amplitude, double phase)
 {
-    double xd = double(*x) / agg::image_subpixel_scale - cx;
-    double yd = double(*y) / agg::image_subpixel_scale - cy;
+    double xd = double(*x) / (double)agg::image_subpixel_scale - cx;
+    double yd = double(*y) / (double)agg::image_subpixel_scale - cy;
     double a = double(100.0 - sqrt(xd * xd + yd * yd)) / 100.0 * (0.1 / -amplitude);
     double sa = sin(a - phase/25.0);
     double ca = cos(a - phase/25.0);
-    *x = int((xd * ca - yd * sa + cx) * agg::image_subpixel_scale);
-    *y = int((xd * sa + yd * ca + cy) * agg::image_subpixel_scale);
+    *x = int((xd * ca - yd * sa + cx) * (double)agg::image_subpixel_scale);
+    *y = int((xd * sa + yd * ca + cy) * (double)agg::image_subpixel_scale);
 }
 
 
@@ -413,8 +413,8 @@ public:
         agg::platform_support(format, flip_y),
         m_angle     (5,      5,    150,     12,    !flip_y),
         m_scale     (5,      5+15, 150,     12+15, !flip_y),
-        m_period    (5+170,  5,    150+170, 12,    !flip_y),
         m_amplitude (5+170,  5+15, 150+170, 12+15, !flip_y),
+        m_period    (5+170,  5,    150+170, 12,    !flip_y),
         m_distortion(480,    5,    600,     90,    !flip_y),
 
         m_center_x(0.0),
