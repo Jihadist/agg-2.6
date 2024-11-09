@@ -192,6 +192,8 @@ namespace agg
             m_bpp = 32;
             break;
 #endif
+        default:
+            break;
         }
     }
 
@@ -407,6 +409,8 @@ namespace agg
 
                         case key_down:
                             down = true;
+                            break;
+                        default:
                             break;
                         }
 

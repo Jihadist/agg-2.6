@@ -61,8 +61,8 @@ class the_application : public agg::platform_support
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
-        m_step  (115,  5,    400, 11,     !flip_y),
         m_radius(115,  5+15, 400, 11+15,  !flip_y),
+        m_step  (115,  5,    400, 11,     !flip_y),
         m_filters(0.0, 0.0, 110.0, 210.0, !flip_y),
         m_normalize  (8.0, 215.0, "Normalize Filter", !flip_y),
         m_run        (8.0, 245.0, "RUN Test!", !flip_y),

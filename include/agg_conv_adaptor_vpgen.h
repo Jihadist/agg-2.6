@@ -102,7 +102,7 @@ namespace agg
                     if(m_vpgen.auto_close() && m_vertices > 2)
                     {
                         m_vpgen.line_to(m_start_x, m_start_y);
-                        m_poly_flags = path_cmd_end_poly | path_flags_close;
+                        m_poly_flags = +path_cmd_end_poly | path_flags_close;
                         m_start_x    = tx;
                         m_start_y    = ty;
                         m_vertices   = -1;
@@ -140,7 +140,7 @@ namespace agg
                     if(m_vpgen.auto_close() && m_vertices > 2)
                     {
                         m_vpgen.line_to(m_start_x, m_start_y);
-                        m_poly_flags = path_cmd_end_poly | path_flags_close;
+                        m_poly_flags = +path_cmd_end_poly | path_flags_close;
                         m_vertices   = -2;
                         continue;
                     }

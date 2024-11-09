@@ -67,7 +67,7 @@ namespace agg
             m_cmd[3] = path_cmd_line_to;
             m_cmd[4] = path_cmd_line_to;
             m_cmd[5] = path_cmd_line_to;
-            m_cmd[7] = path_cmd_end_poly | path_flags_close | path_flags_ccw;
+            m_cmd[7] = +path_cmd_end_poly | path_flags_close | path_flags_ccw;
             m_cmd[6] = path_cmd_stop;
             return;
         }
@@ -88,7 +88,7 @@ namespace agg
             m_cmd[1] = path_cmd_line_to;
             m_cmd[2] = path_cmd_line_to;
             m_cmd[3] = path_cmd_line_to;
-            m_cmd[4] = path_cmd_end_poly | path_flags_close | path_flags_ccw;
+            m_cmd[4] = +path_cmd_end_poly | path_flags_close | path_flags_ccw;
             m_cmd[5] = path_cmd_stop;
             return;
         }

@@ -57,8 +57,8 @@ namespace agg
             m_x = x;
             m_y = y;
             m_trans->transform(&x, &y);
-            m_ix = iround(x * subpixel_scale);
-            m_iy = iround(y * subpixel_scale);
+            m_ix = iround(x * (double)subpixel_scale);
+            m_iy = iround(y * (double)subpixel_scale);
         }
 
         //----------------------------------------------------------------
@@ -68,8 +68,8 @@ namespace agg
             double x = m_x;
             double y = m_y;
             m_trans->transform(&x, &y);
-            m_ix = iround(x * subpixel_scale);
-            m_iy = iround(y * subpixel_scale);
+            m_ix = iround(x * (double)subpixel_scale);
+            m_iy = iround(y * (double)subpixel_scale);
         }
 
         //----------------------------------------------------------------

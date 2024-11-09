@@ -131,8 +131,8 @@ namespace agg
         {
             m_height = uceil(src.height());
             m_width  = uceil(src.width());
-            m_width_hr = uround(src.width() * line_subpixel_scale);
-            m_half_height_hr = uround(src.height() * line_subpixel_scale/2);
+            m_width_hr = uround(src.width() * (double)line_subpixel_scale);
+            m_half_height_hr = uround(src.height() * (double)line_subpixel_scale/2);
             m_offset_y_hr = m_dilation_hr + m_half_height_hr - line_subpixel_scale/2;
             m_half_height_hr += line_subpixel_scale/2;
 
@@ -870,13 +870,13 @@ namespace agg
         double scale_x() const   { return m_scale_x; }
 
         //---------------------------------------------------------------------
-        void   start_x(double s) { m_start = iround(s * line_subpixel_scale); }
-        double start_x() const   { return double(m_start) / line_subpixel_scale; }
+        void   start_x(double s) { m_start = iround(s * (double)line_subpixel_scale); }
+        double start_x() const   { return double(m_start) / (double)line_subpixel_scale; }
 
         //---------------------------------------------------------------------
         int subpixel_width() const { return m_pattern->line_width(); }
         int pattern_width() const { return m_pattern->pattern_width(); }
-        double width() const { return double(subpixel_width()) / line_subpixel_scale; }
+        double width() const { return double(subpixel_width()) / (double)line_subpixel_scale; }
 
         //-------------------------------------------------------------------------
         void pixel(color_type* p, int x, int y) const

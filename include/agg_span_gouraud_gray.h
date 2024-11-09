@@ -72,7 +72,7 @@ namespace agg
                 if(k > 1.0) k = 1.0;
                 m_v = m_v1 + iround(m_dv * k);
                 m_a = m_a1 + iround(m_da * k);
-                m_x = iround((m_x1 + m_dx * k) * subpixel_scale);
+                m_x = iround((m_x1 + m_dx * k) * (double)subpixel_scale);
             }
 
             double m_x1;
@@ -182,8 +182,10 @@ namespace agg
             {
                 vv = v.y();
                 va = a.y();
-                if(vv < 0) vv = 0; if(vv > lim) vv = lim;
-                if(va < 0) va = 0; if(va > lim) va = lim;
+                if(vv < 0) vv = 0; 
+                if(vv > lim) vv = lim;
+                if(va < 0) va = 0; 
+                if(va > lim) va = lim;
                 span->v = (value_type)vv;
                 span->a = (value_type)va;
                 v     += subpixel_scale; 
@@ -217,8 +219,10 @@ namespace agg
             {
                 vv = v.y();
                 va = a.y();
-                if(vv < 0) vv = 0; if(vv > lim) vv = lim;
-                if(va < 0) va = 0; if(va > lim) va = lim;
+                if(vv < 0) vv = 0; 
+                if(vv > lim) vv = lim;
+                if(va < 0) va = 0; 
+                if(va > lim) va = lim;
                 span->v = (value_type)vv;
                 span->a = (value_type)va;
                 v += subpixel_scale; 

@@ -397,7 +397,7 @@ namespace agg
             if(m_closed && !m_stop)
             {
                 m_stop = true;
-                return path_cmd_end_poly | path_flags_close;
+                return +path_cmd_end_poly | path_flags_close;
             }
             return path_cmd_stop;
         }
@@ -462,7 +462,7 @@ namespace agg
             if(m_closed && !m_stop)
             {
                 m_stop = true;
-                return path_cmd_end_poly | path_flags_close;
+                return +path_cmd_end_poly | path_flags_close;
             }
             return path_cmd_stop;
         }
@@ -524,7 +524,7 @@ namespace agg
             if(m_closed && !m_stop)
             {
                 m_stop = true;
-                return path_cmd_end_poly | path_flags_close;
+                return +path_cmd_end_poly | path_flags_close;
             }
             return path_cmd_stop;
         }
@@ -719,7 +719,8 @@ namespace agg
         template<class VertexSource> 
         void concat_path(VertexSource& vs, unsigned path_id = 0)
         {
-            double x, y;
+            double x = 0;
+            double y = 0;
             unsigned cmd;
             vs.rewind(path_id);
             while(!is_stop(cmd = vs.vertex(&x, &y)))

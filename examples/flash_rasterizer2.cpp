@@ -509,7 +509,7 @@ int agg_main(int argc, char* argv[])
         char buf[256];
         if(strcmp(fname, "shapes.txt") == 0)
         {
-            sprintf(buf, "File not found: %s%s. Download http://www.antigrain.com/%s%s\n"
+            sprintf(buf, "File not found: %s. Download http://www.antigrain.com/%s\n"
                          "or copy it from the ../art directory.",
                     fname, fname);
         }

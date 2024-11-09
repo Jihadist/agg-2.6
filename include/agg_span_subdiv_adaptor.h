@@ -87,7 +87,7 @@ namespace agg
         void begin(double x, double y, unsigned len)
         {
             m_pos   = 1;
-            m_src_x = iround(x * subpixel_scale) + subpixel_scale;
+            m_src_x = iround(x * (double)subpixel_scale) + subpixel_scale;
             m_src_y = y;
             m_len   = len;
             if(len > m_subdiv_size) len = m_subdiv_size;

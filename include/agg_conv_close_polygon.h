@@ -85,7 +85,7 @@ namespace agg
             {
                 if(m_line_to)
                 {
-                    m_cmd[0]  = path_cmd_end_poly | path_flags_close;
+                    m_cmd[0]  = +path_cmd_end_poly | path_flags_close;
                     m_cmd[1]  = path_cmd_stop;
                     m_vertex  = 0;
                     m_line_to = false;
@@ -100,7 +100,7 @@ namespace agg
                 {
                     m_x[0]    = 0.0;
                     m_y[0]    = 0.0;
-                    m_cmd[0]  = path_cmd_end_poly | path_flags_close;
+                    m_cmd[0]  = +path_cmd_end_poly | path_flags_close;
                     m_x[1]    = *x;
                     m_y[1]    = *y;
                     m_cmd[1]  = cmd;

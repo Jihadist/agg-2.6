@@ -115,7 +115,7 @@ namespace agg
         if(m_cur_vertex == m_src_vertices.size())
         {
             ++m_cur_vertex;
-            return path_cmd_end_poly | m_flags;
+            return +path_cmd_end_poly | m_flags;
         }
 
         if(m_cur_vertex > m_src_vertices.size())

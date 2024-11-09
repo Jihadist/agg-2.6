@@ -931,7 +931,7 @@ public:
         ls.width(1.5);
         label.text(mol.name());
         label.size(10.0);
-        label.start_point(10.0, start_height - 20.0);
+        label.start_point(10.0, (double)start_height - 20.0);
         ras.reset();
         ras.add_path(name);
         rs.color(agg::rgba(0,0,0));
