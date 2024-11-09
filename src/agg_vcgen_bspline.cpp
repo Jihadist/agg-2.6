@@ -133,6 +133,7 @@ namespace agg
             case initial:
                 rewind(0);
 
+                AGG_FALLTHROUGH
             case ready:
                 if(m_src_vertices.size() < 2)
                 {
@@ -155,6 +156,7 @@ namespace agg
                 m_status = polygon;
                 m_src_vertex = 0;
 
+                AGG_FALLTHROUGH
             case polygon:
                 if(m_cur_abscissa >= m_max_abscissa)
                 {
